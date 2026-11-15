@@ -44,6 +44,23 @@ jobs:
           "CSC_LINK=$certificatePath" >> $env:GITHUB_ENV
           "CSC_KEY_PASSWORD=$env:WINDOWS_CERTIFICATE_PASSWORD" >> $env:GITHUB_ENV
 
+      - name: Configure Google Desktop OAuth client
+        env:
+          GOOGLE_DESKTOP_CLIENT_SECRET: ${{ secrets.GOOGLE_DESKTOP_CLIENT_SECRET }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:GOOGLE_DESKTOP_CLIENT_SECRET)) {
+            throw 'Add the GOOGLE_DESKTOP_CLIENT_SECRET Actions secret before creating a release.'
+          }
+          $oauthClient = @{
+            client_id = '424719795420-37c0n990t8o9orb9486rrefp0n7p2gb7.apps.googleusercontent.com'
+            client_secret = $env:GOOGLE_DESKTOP_CLIENT_SECRET
+          } | ConvertTo-Json
+          [IO.File]::WriteAllText(
+            (Join-Path $PWD 'desktop/oauth-client.json'),
+            $oauthClient,
+            [Text.UTF8Encoding]::new($false)
+          )
+
       - name: Build portable Windows app
         run: npm run build:win
 

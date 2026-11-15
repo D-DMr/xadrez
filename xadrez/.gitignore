@@ -2,3 +2,4 @@ node_modules/
 dist/
 *.log
 desktop/icon.ico
+desktop/oauth-client.json

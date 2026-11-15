@@ -1,6 +1,7 @@
 const crypto = require('node:crypto');
 const http = require('node:http');
 const path = require('node:path');
+const fs = require('node:fs');
 const { fileURLToPath, pathToFileURL } = require('node:url');
 const { app, BrowserWindow, ipcMain, shell } = require('electron');
 
@@ -8,10 +9,12 @@ const gamePage = path.resolve(__dirname, '../public/index.html');
 const preloadPage = path.resolve(__dirname, 'preload.cjs');
 const gameUrl = pathToFileURL(gamePage).href;
 const googleDesktopClientId = '424719795420-37c0n990t8o9orb9486rrefp0n7p2gb7.apps.googleusercontent.com';
+const oauthClientConfig = path.join(__dirname, 'oauth-client.json');
 const hasSingleInstanceLock = app.requestSingleInstanceLock();
 let signInInProgress = null;
 
 function signInWithGoogle() {
+  const { client_secret: clientSecret } = loadOAuthClientConfig();
   if (signInInProgress) return signInInProgress;
 
   signInInProgress = new Promise((resolve, reject) => {
@@ -52,7 +55,7 @@ function signInWithGoogle() {
       }
 
       try {
-        const tokens = await exchangeGoogleCode(code, codeVerifier, redirectUri);
+        const tokens = await exchangeGoogleCode(code, codeVerifier, redirectUri, clientSecret);
         finish(null, { idToken: tokens.id_token });
       } catch (error) {
         finish(error);
@@ -97,12 +100,30 @@ function signInWithGoogle() {
   return signInInProgress;
 }
 
-async function exchangeGoogleCode(code, codeVerifier, redirectUri) {
+function loadOAuthClientConfig() {
+  let config;
+  try {
+    config = JSON.parse(fs.readFileSync(oauthClientConfig, 'utf8'));
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      throw new Error('Google sign-in is not configured in this build. Please download the latest app or contact the app publisher.');
+    }
+    throw new Error(`Could not read the Google sign-in configuration: ${error.message}`);
+  }
+  if (config.client_id !== googleDesktopClientId ||
+      typeof config.client_secret !== 'string' || !config.client_secret.trim()) {
+    throw new Error('The Google sign-in configuration is invalid. Please contact the app publisher.');
+  }
+  return config;
+}
+
+async function exchangeGoogleCode(code, codeVerifier, redirectUri, clientSecret) {
   const response = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
       client_id: googleDesktopClientId,
+      client_secret: clientSecret,
       code,
       code_verifier: codeVerifier,
       grant_type: 'authorization_code',
