@@ -1,21 +1,21 @@
 # Xadrez Total
 
-## Aplicação Windows
+## Aplicação Windows portátil
 
-O instalador contém o jogo e pode ser criado num computador Windows:
+O executável portátil contém o jogo e pode ser criado num computador Windows:
 
 ```sh
 npm ci
 npm run build:win
 ```
 
-O executável é criado em `dist/Xadrez-Total-Setup.exe`. É um instalador `.exe` único; como qualquer instalador, instala os ficheiros da aplicação no computador. Para publicar uma nova versão para download, envia uma tag `v*` (por exemplo, `v1.0.1`). O workflow em `.github/workflows/release-windows.yml` cria uma GitHub Release e anexa o instalador. A aba **Descarregar** do site aponta para o instalador da última release.
+O executável é criado em `dist/Xadrez-Total.exe`. É um `.exe` portátil: não tem assistente de instalação; a primeira execução extrai os componentes necessários para uma pasta temporária. Para publicar uma nova versão para download, envia uma tag `v*`. O workflow em `.github/workflows/release-windows.yml` cria uma GitHub Release e anexa o executável. A aba **Descarregar** do site aponta para o ficheiro da última release.
 
-O tabuleiro, puzzles, regras, aberturas, táticas, definições e partidas contra o computador funcionam offline. O início de sessão Google só está disponível na versão web. A aplicação impede que duas janelas independentes sejam abertas pelo mesmo utilizador; os processos auxiliares do Chromium/Electron fazem parte normal da aplicação.
+O tabuleiro, puzzles, regras, aberturas, táticas, definições e partidas contra o computador funcionam offline. O início de sessão Google usa o navegador predefinido e um fluxo OAuth de aplicação instalada com PKCE; precisa de internet. A aplicação impede que duas janelas independentes sejam abertas pelo mesmo utilizador; os processos auxiliares do Chromium/Electron fazem parte normal da aplicação.
 
-## Assinatura do instalador
+## Assinatura digital
 
-Sem certificado de assinatura de código, o Windows pode mostrar o aviso de editor desconhecido. Não é possível remover esse aviso apenas com uma alteração ao código. Para assinar os próximos instaladores, compra/obtém um certificado de assinatura de código Windows em formato PKCS#12 (`.p12`) e adiciona aos GitHub Actions secrets do repositório:
+Sem certificado de assinatura de código, o Windows pode mostrar o aviso do Microsoft Defender SmartScreen. Não é possível remover ou contornar esse aviso com uma alteração ao código. Para assinar as próximas versões, obtém um certificado de assinatura de código Windows em formato PKCS#12 (`.p12`) e adiciona aos GitHub Actions secrets do repositório:
 
 - `WINDOWS_CERTIFICATE_BASE64`: conteúdo do certificado `.p12` codificado em Base64.
 - `WINDOWS_CERTIFICATE_PASSWORD`: palavra-passe do certificado.

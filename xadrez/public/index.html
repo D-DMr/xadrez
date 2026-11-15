@@ -255,8 +255,8 @@ function gClick(i){const s=G.s;if(G.rv>=0&&G.rv<G.hs.length)return;if(over(s)||G
  if(p&&p[0]==s.t){G.sel=i;G.tg=L.filter(m=>m.f==i).map(m=>m.t)}else{G.sel=-1;G.tg=[]}G.pm=null;render()}
 function newGame(){Object.assign(G,{s:fen(START),hs:[],sans:[],sel:-1,tg:[],last:null,pm:null,tm:[TC[G.tc][0],TC[G.tc][0]],flag:'',resign:'',rec:0,rv:-1,cp:'',flip:G.mode==1&&G.me=='b'?1:0});render();aiMove()}
 function resignGame(){if(G.resign||G.flag||over(G.s))return;G.resign=G.mode==1?G.me:G.s.t;G.sel=-1;G.tg=[];G.pm=null;G.rv=-1;render()}
-const DESKTOP_DOWNLOAD_URL='https://github.com/D-DMr/xadrez/releases/latest/download/Xadrez-Total-Setup.exe';
-function pgDownload(){return `<div class="card" style="max-width:760px;margin:0 auto"><h2 class="h" style="font-size:28px">Joga no teu computador</h2><p>Instala o Xadrez Total no Windows e joga contra o computador, mesmo sem internet.</p><p><b>Windows 10/11 · 64 bits</b></p><a class="btn big" href="${DESKTOP_DOWNLOAD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none">⬇ Descarregar instalador (.exe)</a><p class="mut">O jogo e as tuas definições ficam neste computador. O início de sessão com Google está disponível na versão web e requer internet.</p><p class="mut">O Windows pode mostrar um aviso por o instalador não ter assinatura digital.</p></div>`}
+const DESKTOP_DOWNLOAD_URL='https://github.com/D-DMr/xadrez/releases/latest/download/Xadrez-Total.exe';
+function pgDownload(){return `<div class="card" style="max-width:760px;margin:0 auto"><h2 class="h" style="font-size:28px">Joga no teu computador</h2><p>Descarrega e abre o ficheiro do Xadrez Total. Não precisa de instalação.</p><p><b>Windows 10/11 · 64 bits</b></p><a class="btn big" href="${DESKTOP_DOWNLOAD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none">⬇ Descarregar app (.exe)</a><p class="mut">As partidas, puzzles e definições funcionam offline. Para iniciar sessão com Google, a app abre o navegador e precisa de internet.</p><p class="mut">Sem assinatura digital, o Windows pode mostrar o aviso Microsoft Defender SmartScreen. A aplicação não contorna esse aviso.</p></div>`}
 /* PEÇAS */
 const PI={K:['Rei','—','1 casa em qualquer direção. Nunca pode ficar em xeque. Faz o roque com a torre.'],Q:['Dama','9','Move-se como a torre e o bispo juntos: quantas casas quiseres em linha reta ou diagonal.'],R:['Torre','5','Linhas e colunas, sem saltar peças. Brilha em colunas abertas e nos finais.'],B:['Bispo','3','Diagonais, sem saltar peças. Fica sempre na mesma cor de casa.'],N:['Cavalo','3','Move-se em «L» (2 + 1) e é a única peça que salta por cima das outras.'],P:['Peão','1','Avança 1 casa (2 no primeiro lance) e captura na diagonal. Ao chegar ao fim, promove.']};
 function pgPecas(){const b=Array(64).fill(null);b[P.sq]=P.col+P.pc;const s={b,t:P.col,c:'',ep:-1,h:0},tg=gen(s).map(m=>m.t),i=PI[P.pc];
@@ -369,7 +369,7 @@ render();
 </script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
-import { getAuth, GoogleAuthProvider, getRedirectResult, onAuthStateChanged, signInWithRedirect, signOut } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
+import { getAuth, GoogleAuthProvider, getRedirectResult, onAuthStateChanged, signInWithCredential, signInWithRedirect, signOut } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
 import { getFirestore, addDoc, collection, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
 const app=initializeApp({apiKey:'AIzaSyB0YYPdPXyvthU1autG611fsjfoSgxDZk0',authDomain:'xadrez-3a613.firebaseapp.com',projectId:'xadrez-3a613',storageBucket:'xadrez-3a613.firebasestorage.app',messagingSenderId:'424719795420',appId:'1:424719795420:web:6fb57386b78b51d97aa019'});
 const auth=getAuth(app),db=getFirestore(app),provider=new GoogleAuthProvider();
@@ -384,7 +384,15 @@ const recordLogin=async user=>{
 };
 getRedirectResult(auth).then(result=>{if(result?.user)return recordLogin(result.user)}).catch(error=>send('firebase-auth-message',{message:'Não foi possível concluir o início de sessão: '+error.message}));
 window.addEventListener('firebase-google-signin',async()=>{
-  try{await signInWithRedirect(auth,provider)}
+  try{
+    if(window.desktopAuth){
+      const {idToken}=await window.desktopAuth.signIn();
+      const result=await signInWithCredential(auth,GoogleAuthProvider.credential(idToken));
+      await recordLogin(result.user);
+      return
+    }
+    await signInWithRedirect(auth,provider)
+  }
   catch(error){
     const message=error.code=='auth/operation-not-allowed'?'Ativa o fornecedor Google em Firebase Console > Authentication > Sign-in method.':error.code=='auth/unauthorized-domain'?'Autoriza xadrez-3a613.firebaseapp.com em Firebase Console > Authentication > Settings > Authorized domains.':'Não foi possível iniciar sessão: '+error.message;
     send('firebase-auth-message',{message});return

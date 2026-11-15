@@ -1,4 +1,4 @@
-name: Windows installer
+name: Windows portable app
 
 on:
   push:
@@ -44,12 +44,12 @@ jobs:
           "CSC_LINK=$certificatePath" >> $env:GITHUB_ENV
           "CSC_KEY_PASSWORD=$env:WINDOWS_CERTIFICATE_PASSWORD" >> $env:GITHUB_ENV
 
-      - name: Build Windows installer
+      - name: Build portable Windows app
         run: npm run build:win
 
-      - name: Publish installer
+      - name: Publish portable app
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
           make_latest: true
-          files: xadrez/dist/Xadrez-Total-Setup.exe
+          files: xadrez/dist/Xadrez-Total.exe

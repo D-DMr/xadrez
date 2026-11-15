@@ -6,7 +6,7 @@
   "main": "desktop/main.cjs",
   "scripts": {
     "start": "electron .",
-    "build:win": "electron-builder --win nsis --x64 --publish never"
+    "build:win": "electron-builder --win portable --x64 --publish never"
   },
   "devDependencies": {
     "electron": "^45.3.2",
@@ -26,20 +26,13 @@
     "win": {
       "target": [
         {
-          "target": "nsis",
+          "target": "portable",
           "arch": [
             "x64"
           ]
         }
       ],
-      "artifactName": "Xadrez-Total-Setup.exe"
-    },
-    "nsis": {
-      "oneClick": false,
-      "perMachine": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
+      "artifactName": "Xadrez-Total.exe"
     }
   },
   "author": {
