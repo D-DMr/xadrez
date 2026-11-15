@@ -33,6 +33,17 @@ jobs:
           $version = $env:GITHUB_REF_NAME.TrimStart('v')
           npm version $version --no-git-tag-version --allow-same-version
 
+      - name: Configure optional Windows code signing
+        if: env.WINDOWS_CERTIFICATE_BASE64 != ''
+        env:
+          WINDOWS_CERTIFICATE_BASE64: ${{ secrets.WINDOWS_CERTIFICATE_BASE64 }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+        run: |
+          $certificatePath = Join-Path $env:RUNNER_TEMP 'windows-signing.p12'
+          [IO.File]::WriteAllBytes($certificatePath, [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE_BASE64))
+          "CSC_LINK=$certificatePath" >> $env:GITHUB_ENV
+          "CSC_KEY_PASSWORD=$env:WINDOWS_CERTIFICATE_PASSWORD" >> $env:GITHUB_ENV
+
       - name: Build Windows installer
         run: npm run build:win
 

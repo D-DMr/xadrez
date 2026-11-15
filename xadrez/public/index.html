@@ -334,7 +334,7 @@ function pgRep(t){const R=RS[t],B=cur(t),k=R.k;
 /* RENDER */
 function render(){const pages={jogar:pgJogar,download:pgDownload,puzzles:pgPz,perfil:()=>pgPerfil()+pgConta(),config:pgCfg,pecas:pgPecas,aberturas:()=>pgRep('aberturas'),taticas:()=>pgRep('taticas')};
  $('app').innerHTML=`<div class="shell"><aside><div class="logo"><svg width="34" height="34" viewBox="0 0 34 34" style="vertical-align:-8px;margin-right:8px" aria-hidden="true"><rect width="34" height="34" rx="8" fill="#81b64c"/><text x="17" y="26" font-size="24" text-anchor="middle" fill="#fff">♞</text></svg>Xadrez<b>Total</b></div>
- <nav>${TABS.filter(([id])=>!DESKTOP_APP||id=='jogar'||id=='config').map(([id,l])=>`<button class="tab" ${id==tab?'aria-current="page"':''} data-a="tab" data-x="${id}">${l}</button>`).join('')}</nav>${DESKTOP_APP?'':acct()}</aside><main>
+ <nav>${TABS.filter(([id])=>!DESKTOP_APP||id!='download').map(([id,l])=>`<button class="tab" ${id==tab?'aria-current="page"':''} data-a="tab" data-x="${id}">${l}</button>`).join('')}</nav>${DESKTOP_APP?'':acct()}</aside><main>
  ${pages[tab]?pages[tab]():cards(TXT[tab])}</main></div>`;document.title='Xadrez Total — '+TABS.find(t=>t[0]==tab)[1].slice(2);applyTh();upClk();document.body.classList.toggle('searching',!!G.srch&&tab=='jogar')}
 function act(a,x){
  if(a=='tab'){CM='';location.hash=x;return}

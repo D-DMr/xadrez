@@ -4,6 +4,7 @@ const { app, BrowserWindow, shell } = require('electron');
 
 const gamePage = path.resolve(__dirname, '../public/index.html');
 const gameUrl = pathToFileURL(gamePage).href;
+const hasSingleInstanceLock = app.requestSingleInstanceLock();
 
 function createWindow() {
   const window = new BrowserWindow({
@@ -29,13 +30,25 @@ function createWindow() {
   window.loadFile(gamePage);
 }
 
-app.whenReady().then(() => {
-  createWindow();
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+if (!hasSingleInstanceLock) {
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    const window = BrowserWindow.getAllWindows()[0];
+    if (window) {
+      if (window.isMinimized()) window.restore();
+      window.focus();
+    }
   });
-});
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
-});
+  app.whenReady().then(() => {
+    createWindow();
+    app.on('activate', () => {
+      if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    });
+  });
+
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') app.quit();
+  });
+}
