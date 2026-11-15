@@ -1,0 +1,44 @@
+name: Windows installer
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: xadrez
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: xadrez/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set app version from tag
+        run: |
+          $version = $env:GITHUB_REF_NAME.TrimStart('v')
+          npm version $version --no-git-tag-version --allow-same-version
+
+      - name: Build Windows installer
+        run: npm run build:win
+
+      - name: Publish installer
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          make_latest: true
+          files: xadrez/dist/Xadrez-Total-Setup.exe

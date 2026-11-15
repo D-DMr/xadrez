@@ -1,0 +1,55 @@
+{
+  "name": "xadrez-total-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aplicação desktop do Xadrez Total",
+  "main": "desktop/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "electron": "^45.3.2",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "pt.xadrez.total",
+    "productName": "Xadrez Total",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "desktop/**/*",
+      "public/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "Xadrez-Total-Setup.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "author": {
+    "name": "D-DMr"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/D-DMr/xadrez.git"
+  },
+  "overrides": {
+    "minimatch": "^11.0.8"
+  }
+}

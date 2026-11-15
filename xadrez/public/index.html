@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="pt-PT"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Xadrez Total — Joga xadrez grátis online</title>
+<meta name="description" content="Joga xadrez grátis no Xadrez Total. Aprende com puzzles, táticas, aberturas e partidas contra o computador, diretamente no navegador.">
+<meta name="application-name" content="Xadrez Total">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://xadrez-3a613.firebaseapp.com/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_PT">
+<meta property="og:site_name" content="Xadrez Total">
+<meta property="og:title" content="Xadrez Total — Joga xadrez grátis online">
+<meta property="og:description" content="Joga xadrez grátis e aprende com puzzles, táticas e aberturas.">
+<meta property="og:url" content="https://xadrez-3a613.firebaseapp.com/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Xadrez Total","description":"Joga xadrez grátis e aprende com puzzles, táticas e aberturas.","url":"https://xadrez-3a613.firebaseapp.com/","inLanguage":"pt-PT"}</script>
+<script>if(location.hostname==='xadrez-3a613.web.app')location.replace('https://xadrez-3a613.firebaseapp.com'+location.pathname+location.search+location.hash);</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Crect width='34' height='34' rx='8' fill='%2381b64c'/%3E%3Ctext x='17' y='26' font-size='24' text-anchor='middle' fill='white'%3E%E2%99%9E%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f8fc;--g:#e6ebf5;--c:#fff;--ink:#1b1b1b;--mut:#555;--lt:#f0d9b5;--dk:#b58863;--b:#1d5fd6;--p:#6b3fc4;--gr:#1f8a4c;--o:#c4500f;--r:#d32f2f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171b26;--g:#212737;--c:#222839;--ink:#eef1f8;--mut:#a9b2c7;--b:#6ea0ff;--p:#b394ff;--gr:#5cd68c;--o:#ff9a5c;--r:#ff7b7b}}
+:root[data-theme="dark"]{--bg:#171b26;--g:#212737;--c:#222839;--ink:#eef1f8;--mut:#a9b2c7;--b:#6ea0ff;--p:#b394ff;--gr:#5cd68c;--o:#ff9a5c;--r:#ff7b7b}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);background-image:linear-gradient(var(--g) 1px,transparent 1px),linear-gradient(90deg,var(--g) 1px,transparent 1px);background-size:28px 28px;font-family:'Patrick Hand','Segoe Print',cursive;color:var(--ink);font-size:18px}
+#app{max-width:1100px;margin:0 auto;padding:14px}
+.h{font-family:Kalam,cursive;font-weight:700;margin:0;line-height:1.1}
+.card{background:var(--c);border:2.5px solid var(--ink);border-radius:14px;padding:12px 16px}
+nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+.tab,.btn,.item{font:inherit;font-size:17px;border:2.5px solid var(--b);border-radius:12px;background:var(--c);color:var(--b);padding:6px 12px;min-height:44px;cursor:pointer}
+.tab[aria-current=page],.btn.on,.item.on{background:var(--b);color:#fff}
+.item{text-align:left;color:var(--ink)}.item span{font-size:16px;opacity:.85}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.bd{display:grid;grid-template-columns:repeat(8,1fr);width:min(92vw,480px);border:3px solid var(--ink);border-radius:6px;overflow:hidden;user-select:none}
+.sq{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:clamp(28px,7.5vw,48px);line-height:1;position:relative;cursor:pointer}
+.l{background:var(--lt)}.d{background:var(--dk)}
+.pw{color:#fff;text-shadow:0 0 2px #000,0 0 2px #000,0 0 3px #000}.pb{color:#111;text-shadow:0 0 1px #fff}
+.lm{box-shadow:inset 0 0 0 100px rgba(224,168,0,.35)}.sel{box-shadow:inset 0 0 0 4px #e0a800}.ck{background:#d32f2f}
+.mv::after{content:"";position:absolute;width:30%;height:30%;border-radius:50%;background:rgba(31,138,76,.8)}
+.side{flex:1;min-width:240px;display:flex;flex-direction:column;gap:10px}
+.grp{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.grp b{font-family:Kalam,cursive;margin-right:4px}
+.cur{background:#e0a800;color:#1b1b1b;border-radius:6px;padding:0 4px}
+.mvs{line-height:1.7;min-height:48px;max-width:480px;margin-top:10px}
+.ctl{display:flex;gap:8px;margin-top:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:14px}
+.st{font-family:Kalam,cursive;font-weight:700;font-size:22px}
+.clk{font-family:Kalam,cursive;font-weight:700;font-size:26px;padding:4px 14px;border:2.5px solid var(--ink);border-radius:10px;background:var(--c);width:max-content;margin:6px 0}.clk.on{background:#e0a800;color:#1b1b1b}.clk.lo{color:var(--r)}
+:focus-visible{outline:3px solid #e0a800;outline-offset:2px}
+:root:root:root{--bg:#312e2b;--g:#312e2b;--c:#262421;--ink:#fff;--mut:#a7a6a2;--b:#81b64c;--p:#b39cff;--gr:#81b64c;--o:#f7c631;--r:#fa412d;color-scheme:dark}
+@media(prefers-color-scheme:light){:root:root:root:not([data-theme="dark"]){--bg:#edeeea;--g:#edeeea;--c:#fff;--ink:#262421;--mut:#5c5b58;--b:#5d9948;--p:#6b3fc4;--gr:#4a7c3a;--o:#c4500f;--r:#d32f2f;color-scheme:light}}
+body{font-family:'Noto Sans',system-ui,sans-serif;font-size:16px;background-image:none}
+.h,.st,.clk,.grp b{font-family:'Noto Sans',system-ui,sans-serif;font-weight:800}
+#app{max-width:1200px}
+.card{border:1px solid rgba(128,128,128,.25);border-radius:8px;box-shadow:0 3px 0 rgba(0,0,0,.2)}
+.shell{display:flex;gap:18px;align-items:flex-start}
+aside{width:190px;flex:none;position:sticky;top:12px}
+main{flex:1;min-width:0}
+.logo{font-size:26px;font-weight:800;padding:6px 10px 12px}.logo b{color:var(--b)}
+aside nav{flex-direction:column;align-items:stretch;justify-content:flex-start;margin:0;gap:2px}
+.tab{border:0;background:transparent;color:var(--mut);font-weight:700;text-align:left;border-radius:6px}
+.tab:hover{background:rgba(128,128,128,.15);color:var(--ink)}
+.tab[aria-current=page]{background:rgba(128,128,128,.25);color:var(--ink)}
+.btn{border:0;border-bottom:3px solid rgba(0,0,0,.3);background:rgba(128,128,128,.25);color:var(--ink);font-weight:700;border-radius:8px}
+.btn.on{background:var(--b);color:#fff}
+.btn.big{background:var(--b);color:#fff;font-size:22px;font-weight:800;min-height:60px;width:100%}
+.item{border:0;background:rgba(128,128,128,.15)}
+.bd{border:0;border-radius:4px}
+.pbar{display:flex;justify-content:space-between;align-items:center;max-width:480px;gap:8px;padding:2px 0}
+.pbar small{color:var(--mut)}.av{font-size:22px}
+.clk{background:#1f1e1c;border:0;color:#fff;border-radius:6px}.clk.on{background:#fff;color:#262421}
+.srch{text-align:center;padding:40px 20px;max-width:520px;margin:30px auto}.mut{color:var(--mut)}
+.spin{width:64px;height:64px;margin:0 auto 18px;border:7px solid rgba(255,255,255,.15);border-top-color:var(--b);border-radius:50%;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+body.searching{background:radial-gradient(circle at 50% 25%,#4b6f26,#1b1a18 70%);color:#fff}
+.bd{width:min(92vw,var(--bs,480px))}.pbar,.mvs{max-width:var(--bs,480px)}
+.co{position:absolute;font-size:11px;font-style:normal;font-weight:800;opacity:.85;pointer-events:none}.co.r{top:2px;left:3px}.co.f{bottom:1px;right:3px}.l .co{color:var(--dk)}.d .co{color:var(--lt)}
+.cap{font-size:15px;letter-spacing:-3px}
+.bd.im{background:var(--bi) center/cover}.bd.im .sq.l,.bd.im .sq.d{background:transparent}.bd.im .sq.ck{background:#d32f2f}.bd.im .co{color:#fff;text-shadow:0 0 2px #000}
+body[data-ps="1"] .pw{color:#ffd54a;text-shadow:0 0 2px #4a3500,0 0 3px #4a3500}body[data-ps="1"] .pb{color:#cfd8dc;text-shadow:0 0 2px #263238,0 0 3px #263238}
+body[data-ps="2"] .pw{color:#7df9ff;text-shadow:0 0 6px #00e5ff,0 0 2px #004}body[data-ps="2"] .pb{color:#ff6ec7;text-shadow:0 0 6px #ff1493,0 0 2px #400}
+body[data-ps="3"] .pw{color:rgba(255,255,255,.15);-webkit-text-stroke:1.5px #fff;text-shadow:0 0 2px #000}body[data-ps="3"] .pb{color:rgba(0,0,0,.15);-webkit-text-stroke:1.5px #000;text-shadow:none}
+@media(max-width:760px){.shell{flex-direction:column}aside{width:100%;position:static}aside nav{flex-direction:row;flex-wrap:wrap}.logo{padding-bottom:4px}}
+:root:root:root{--bg:#312e2b;--g:#312e2b;--c:#262421;--ink:#fff;--mut:#a7a6a2;--b:#81b64c;--p:#b39cff;--gr:#81b64c;--o:#f7c631;--r:#fa6b5c;color-scheme:dark}
+:root{box-sizing:border-box;padding:0}
+*,*::before,*::after{box-sizing:border-box}
+body{min-height:100vh;margin:0;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);background-color:var(--bg);background-image:radial-gradient(ellipse at 8% 0%,rgba(129,182,76,.09),transparent 36%),radial-gradient(ellipse at 100% 100%,rgba(80,130,220,.07),transparent 38%);color:var(--ink);font:15px/1.55 'Noto Sans',system-ui,sans-serif}
+#app{width:100%;max-width:1480px;margin:0 auto;padding:24px}
+.shell{display:grid;grid-template-columns:230px minmax(0,1fr);align-items:start;gap:26px}
+aside{position:sticky;top:24px;width:auto;padding:14px;background:var(--c);border:1px solid rgba(160,170,180,.18);border-radius:18px;box-shadow:0 12px 32px rgba(0,0,0,.12)}
+main{min-width:0}
+.logo{display:flex;align-items:center;padding:6px 8px 16px;font-size:20px;font-weight:800;letter-spacing:-.6px}
+.logo svg{flex:none}
+.logo b{margin-left:5px;color:var(--b)}
+aside nav{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:4px;margin:0}
+.tab,.btn,.item{min-height:42px;padding:9px 12px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--ink);font:600 14px/1.35 'Noto Sans',system-ui,sans-serif;cursor:pointer;transition:background-color .16s ease,color .16s ease,border-color .16s ease,transform .16s ease}
+.tab{text-align:left;color:var(--mut)}
+.tab:hover,.item:hover{background:rgba(128,128,128,.14);color:var(--ink)}
+.tab[aria-current=page]{background:var(--b);color:#fff}
+.btn{border-color:rgba(150,160,170,.2);background:rgba(128,128,128,.1);font-weight:700}
+.btn:hover{border-color:var(--b);background:rgba(128,128,128,.2);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn.on,.tab[aria-current=page],.item.on{background:var(--b);color:#fff}
+.btn.big{width:100%;min-height:50px;border-color:transparent;background:var(--b);color:#fff;font-size:16px;font-weight:800}
+.btn.big:hover{filter:brightness(1.08)}
+.item{display:block;width:100%;border:0;background:rgba(128,128,128,.1);text-align:left}
+.item span{font-size:13px;opacity:.82}
+.card{padding:18px;background:var(--c);border:1px solid rgba(160,170,180,.18);border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.1)}
+.card p{margin:8px 0}
+.h,.st,.clk,.grp b{font-family:'Noto Sans',system-ui,sans-serif}
+.h{margin:0 0 8px;font-size:20px;font-weight:800;line-height:1.3;letter-spacing:-.3px}
+.st{font-size:16px;font-weight:700}
+.mut{color:var(--mut)}
+.row{display:flex;align-items:flex-start;flex-wrap:wrap;gap:20px}
+.row>div:first-child{min-width:0}
+.side{display:flex;flex:1 1 280px;min-width:min(100%,260px);flex-direction:column;gap:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px;margin-top:16px}
+.grp{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.grp b{margin-right:4px;font-size:13px;font-weight:800}
+.grp .btn{min-height:38px;padding:7px 10px}
+.bd{width:min(92vw,var(--bs,480px));overflow:hidden;border:1px solid rgba(160,170,180,.22);border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.2);user-select:none}
+.sq{position:relative;display:flex;aspect-ratio:1;align-items:center;justify-content:center;line-height:1;font-family:'Noto Sans Symbols 2','Segoe UI Symbol',serif;font-size:clamp(28px,7.5vw,48px);cursor:pointer}
+.pw{color:#fff;text-shadow:0 1px 2px #000,0 0 3px #000}
+.pb{color:#111;text-shadow:0 0 2px #fff}
+.mv::after{width:28%;height:28%;background:rgba(31,138,76,.78)}
+.lm{box-shadow:inset 0 0 0 100px rgba(224,168,0,.28)}
+.sel{box-shadow:inset 0 0 0 3px #f4c84a}
+.ck{background:#d32f2f}
+.pbar{display:flex;max-width:var(--bs,480px);align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:10px;background:rgba(128,128,128,.1)}
+.pbar small{color:var(--mut)}
+.av{font-size:20px}
+.mvs{max-width:var(--bs,480px);min-height:48px;margin-top:12px;line-height:1.8}
+.cur{padding:2px 5px;border-radius:5px;background:var(--b);color:#fff}
+.clk{width:max-content;margin:6px 0;padding:5px 12px;border:1px solid rgba(160,170,180,.2);border-radius:9px;background:rgba(128,128,128,.12);font-size:20px;font-weight:800}
+.clk.on{background:var(--b);color:#fff}
+.clk.lo{color:var(--r)}
+.ctl{display:flex;gap:8px;margin-top:12px}
+.srch{max-width:560px;margin:36px auto;padding:36px 22px;text-align:center}
+.spin{width:52px;height:52px;margin:0 auto 18px;border:5px solid rgba(128,128,128,.2);border-top-color:var(--b);border-radius:50%;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+body.searching{background:radial-gradient(circle at 50% 25%,#4b6f26,#1b1a18 70%);color:#fff}
+.co{position:absolute;font-size:10px;font-style:normal;font-weight:800;opacity:.82;pointer-events:none}
+.co.r{top:2px;left:3px}.co.f{right:3px;bottom:1px}
+.l .co{color:var(--dk)}.d .co{color:var(--lt)}
+.cap{font-size:14px;letter-spacing:-3px}
+.bd.im{background:var(--bi) center/cover}
+.bd.im .sq.l,.bd.im .sq.d{background:transparent}
+.bd.im .sq.ck{background:#d32f2f}
+.bd.im .co{color:#fff;text-shadow:0 0 2px #000}
+body[data-ps="1"] .pw{color:#ffd54a;text-shadow:0 0 2px #4a3500,0 0 3px #4a3500}
+body[data-ps="1"] .pb{color:#cfd8dc;text-shadow:0 0 2px #263238,0 0 3px #263238}
+body[data-ps="2"] .pw{color:#7df9ff;text-shadow:0 0 6px #00e5ff,0 0 2px #004}
+body[data-ps="2"] .pb{color:#ff6ec7;text-shadow:0 0 6px #ff1493,0 0 2px #400}
+body[data-ps="3"] .pw{color:rgba(255,255,255,.15);-webkit-text-stroke:1.5px #fff;text-shadow:0 0 2px #000}
+body[data-ps="3"] .pb{color:rgba(0,0,0,.15);-webkit-text-stroke:1.5px #000;text-shadow:none}
+:focus-visible{outline:3px solid var(--b);outline-offset:3px}
+textarea,input{max-width:100%;font:inherit}
+textarea{border-radius:10px!important}
+@media(max-width:760px){#app{padding:12px}.shell{grid-template-columns:minmax(0,1fr);gap:16px}aside{position:static;padding:12px}.logo{padding:2px 6px 10px}aside nav{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:5px;padding:0 0 8px}.tab{flex:none;white-space:nowrap}.side{flex-basis:100%}.card{padding:15px}.bd{width:min(92vw,var(--bs,480px))}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style></head><body><div id="app"></div>
+<script>
+const F='abcdefgh',PT={K:'R',Q:'D',R:'T',B:'B',N:'C'},GL={K:'♚',Q:'♛',R:'♜',B:'♝',N:'♞',P:'♟\uFE0E'};
+const D={N:[[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]],K:[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]],B:[[-1,-1],[-1,1],[1,-1],[1,1]],R:[[-1,0],[1,0],[0,-1],[0,1]]};
+const sqn=i=>F[i&7]+(8-(i>>3));
+const START='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR';
+function fen(f){const b=[];for(const ch of f){if(ch=='/')continue;if(+ch)for(let k=0;k<+ch;k++)b.push(null);else b.push((ch<'a'?'w':'b')+ch.toUpperCase())}return{b,t:'w',c:'KQkq',ep:-1,h:0}}
+function atk(b,q,by){const r=q>>3,c=q&7,at=(rr,cc,p)=>rr>=0&&rr<8&&cc>=0&&cc<8&&b[rr*8+cc]==by+p,dr=by=='w'?1:-1;
+ if(at(r+dr,c-1,'P')||at(r+dr,c+1,'P'))return 1;
+ for(const[a,e]of D.N)if(at(r+a,c+e,'N'))return 1;
+ for(const[a,e]of D.K)if(at(r+a,c+e,'K'))return 1;
+ for(const k of['B','R'])for(const[a,e]of D[k]){let rr=r+a,cc=c+e;while(rr>=0&&rr<8&&cc>=0&&cc<8){const p=b[rr*8+cc];if(p){if(p[0]==by&&(p[1]==k||p[1]=='Q'))return 1;break}rr+=a;cc+=e}}
+ return 0}
+function gen(s){const b=s.b,t=s.t,o=t=='w'?'b':'w',m=[];
+ for(let i=0;i<64;i++){const p=b[i];if(!p||p[0]!=t)continue;const r=i>>3,c=i&7,k=p[1];
+  if(k=='P'){const d=t=='w'?-1:1,rr=r+d,pr=t=='w'?0:7;if(rr<0||rr>7)continue;
+   const add=to=>{if(rr==pr)for(const q of'QRBN')m.push({f:i,t:to,p:q});else m.push({f:i,t:to})};
+   if(!b[rr*8+c]){add(rr*8+c);if(r==(t=='w'?6:1)&&!b[(r+2*d)*8+c])m.push({f:i,t:(r+2*d)*8+c})}
+   for(const e of[-1,1]){const cc=c+e;if(cc<0||cc>7)continue;const to=rr*8+cc;if(b[to]&&b[to][0]==o)add(to);else if(to==s.ep)m.push({f:i,t:to,ep:1})}
+  }else if(k=='N'||k=='K'){
+   for(const[a,e]of D[k]){const rr=r+a,cc=c+e;if(rr<0||rr>7||cc<0||cc>7)continue;const x=b[rr*8+cc];if(!x||x[0]==o)m.push({f:i,t:rr*8+cc})}
+   if(k=='K'&&i==(t=='w'?60:4)&&!atk(b,i,o)){const[K,Q]=t=='w'?['K','Q']:['k','q'];
+    if(s.c.includes(K)&&!b[i+1]&&!b[i+2]&&!atk(b,i+1,o)&&!atk(b,i+2,o))m.push({f:i,t:i+2,cs:1});
+    if(s.c.includes(Q)&&!b[i-1]&&!b[i-2]&&!b[i-3]&&!atk(b,i-1,o)&&!atk(b,i-2,o))m.push({f:i,t:i-2,cs:1})}
+  }else for(const d of k=='Q'?[...D.B,...D.R]:D[k]){let rr=r+d[0],cc=c+d[1];while(rr>=0&&rr<8&&cc>=0&&cc<8){const x=b[rr*8+cc];if(!x||x[0]==o)m.push({f:i,t:rr*8+cc});if(x)break;rr+=d[0];cc+=d[1]}}
+ }return m}
+function mk(s,m){const b=s.b.slice(),p=b[m.f];b[m.t]=m.p?s.t+m.p:p;b[m.f]=null;
+ if(m.ep)b[m.t+(s.t=='w'?8:-8)]=null;
+ if(m.cs){const rk=m.t>m.f?m.t+1:m.t-2,to=m.t>m.f?m.t-1:m.t+1;b[to]=b[rk];b[rk]=null}
+ let c=s.c;const rm=x=>{c=c.replace(x,'')};
+ if(p[1]=='K')for(const x of s.t=='w'?'KQ':'kq')rm(x);
+ for(const q of[m.f,m.t]){if(q==63)rm('K');if(q==56)rm('Q');if(q==7)rm('k');if(q==0)rm('q')}
+ return{b,t:s.t=='w'?'b':'w',c,ep:p[1]=='P'&&Math.abs(m.t-m.f)==16?(m.f+m.t)/2:-1,h:p[1]=='P'||s.b[m.t]?0:s.h+1}}
+const kq=(b,t)=>b.indexOf(t+'K'),opp=t=>t=='w'?'b':'w';
+const chk=s=>atk(s.b,kq(s.b,s.t),opp(s.t));
+const legal=s=>gen(s).filter(m=>{const n=mk(s,m);return!atk(n.b,kq(n.b,s.t),opp(s.t))});
+const over=s=>!legal(s).length||s.h>=100||s.b.filter(Boolean).length==2;
+function san(s,m,L){const p=s.b[m.f],k=p[1];let x;
+ if(m.cs)x=m.t>m.f?'O-O':'O-O-O';
+ else{const cap=s.b[m.t]||m.ep;
+  if(k=='P')x=(cap?F[m.f&7]+'x':'')+sqn(m.t)+(m.p?'='+PT[m.p]:'');
+  else{const o=L.filter(y=>y!=m&&s.b[y.f]==p&&y.t==m.t);let d='';
+   if(o.length)d=!o.some(y=>(y.f&7)==(m.f&7))?F[m.f&7]:!o.some(y=>(y.f>>3)==(m.f>>3))?String(8-(m.f>>3)):sqn(m.f);
+   x=PT[k]+d+(cap?'x':'')+sqn(m.t)}}
+ const n=mk(s,m);return x+(chk(n)?(legal(n).length?'+':'#'):'')}
+/* IA */
+const V={P:100,N:320,B:330,R:500,Q:900,K:0};
+function ev(b){let v=0;for(let i=0;i<64;i++){const p=b[i];if(!p)continue;const r=i>>3,c=i&7,k=p[1];let x=V[k];
+ if(k=='N'||k=='B'||k=='P')x+=(14-Math.abs(2*r-7)-Math.abs(2*c-7))*2;
+ if(k=='P')x+=6*(p[0]=='w'?6-r:r-1);v+=p[0]=='w'?x:-x}return v}
+function ab(s,d,al,be,ply){if(d==0)return(s.t=='w'?1:-1)*ev(s.b);const L=legal(s);if(!L.length)return chk(s)?-99999+ply:0;
+ L.sort((x,y)=>(s.b[y.t]?1:0)-(s.b[x.t]?1:0));
+ for(const m of L){const v=-ab(mk(s,m),d-1,-be,-al,ply+1);if(v>=be)return be;if(v>al)al=v}return al}
+function pick(s,lv){const L=legal(s);let b=L[0],bv=-1e9;
+ for(const m of L){const n=mk(s,m);let v=chk(n)&&!legal(n).length?1e6:-ab(n,lv-1,-1e9,1e9,1)+Math.random()*(lv==1?90:lv==2?12:3);if(v>bv){bv=v;b=m}}return b}
+/* estado */
+const $=id=>document.getElementById(id);
+const TC={'0':[0,0],'1':[60,0],'3':[180,2],'10':[600,0],'30':[1800,0]},TCL={'0':'∞','1':'Bullet 1+0','3':'Blitz 3+2','10':'Rápido 10+0','30':'Clássico 30+0'},THEMES=[['#f0d9b5','#b58863','Castanho'],['#eeeed2','#769656','Verde'],['#dee3e6','#8ca2ad','Azul'],['#e8dcf5','#8e6bb5','Roxo'],['#e0e0e0','#8d8d8d','Cinza'],['#fbe4ec','#d97ea0','Rosa'],['#d7b98a','#7a4b2a','Madeira']];
+let TH=1,S={v:0,e:0,d:0,r:800,h:[]},ST={pt:0,th:1,ps:0,co:1,so:1,hl:1,bs:480};try{Object.assign(ST,JSON.parse(localStorage.getItem('xzs')))}catch(e){}const sv=()=>{try{localStorage.setItem('xzs',JSON.stringify(ST))}catch(e){}};
+const AVS=['🙂','🦊','🐼','🦁','🐸','🐙','🚀','👑'],clean=s=>String(s||'').replace(/[^\w \-À-ÿ.]/g,'').trim().slice(0,24),hx=/^#[0-9a-f]{6}$/i,imx=/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/,saveS=()=>{try{localStorage.setItem('xz',JSON.stringify(S))}catch(e){}};
+ST.ct=Array.isArray(ST.ct)?ST.ct:[];ST.ct.forEach(o=>THEMES.push([hx.test(o.l)?o.l:'#eeeed2',hx.test(o.d)?o.d:'#769656',clean(o.n),imx.test(o.img||'')?o.img:'']));if(!THEMES[ST.th])ST.th=1;try{S=JSON.parse(localStorage.getItem('xz'))||S}catch(e){}
+const G={s:fen(START),hs:[],sans:[],mode:1,me:'w',lvl:2,flip:0,sel:-1,tg:[],last:null,pm:null,tc:'0',tm:[0,0],flag:'',resign:'',rec:0,rv:-1,an:0,cp:''};
+const fm=x=>Math.floor(x/60)+':'+String(Math.floor(x%60)).padStart(2,'0');
+const clk=c=>G.tc=='0'?'':`<div class="clk" id="clk${c}">${fm(G.tm[c=='w'?0:1])}</div>`;
+function upClk(){for(const c of'wb'){const e=$('clk'+c),x=G.tm[c=='w'?0:1];if(e){e.textContent=fm(x);e.className='clk'+(G.s.t==c&&G.hs.length&&!G.flag?' on':'')+(x<20?' lo':'')}}}
+const applyTh=()=>{const t=THEMES[ST.th]||THEMES[1],r=document.documentElement.style,p=PGT[ST.pt][1],light=ST.pt==1;r.setProperty('--lt',t[0]);r.setProperty('--dk',t[1]);r.setProperty('--bi',t[3]?`url("${t[3]}")`:'none');['--bg','--g','--c','--ink','--mut','--b','--gr'].forEach((k,i)=>r.setProperty(k,p[[0,0,1,2,3,4,4][i]]));r.setProperty('--p',light?'#6b3fc4':'#b39cff');r.setProperty('--o',light?'#c4500f':'#f7c631');r.setProperty('--r',light?'#c62828':'#ff6b5c');r.colorScheme=light?'light':'dark';r.setProperty('--bs',ST.bs+'px');document.body.dataset.ps=ST.ps};
+function rec(r){if(G.mode!=1||G.rec)return;G.rec=1;S[r]++;S.h=[{r,o:G.opp?G.opp.n+' ('+G.opp.r+')':'Bot '+['Novato','Clube','Mestre'][G.lvl-1],t:TCL[G.tc]},...(S.h||[])].slice(0,10);if(G.opp)S.r=Math.max(100,(S.r||800)+(r=='v'?12:r=='d'?-12:0));try{localStorage.setItem('xz',JSON.stringify(S))}catch(e){}}
+let lt=Date.now();setInterval(()=>{const n=Date.now(),d=(n-lt)/1000;lt=n;if(tab!='jogar'||G.tc=='0'||!G.hs.length||G.flag||G.resign||over(G.s))return;const i=G.s.t=='w'?0:1;G.tm[i]-=d;if(G.tm[i]<=0){G.tm[i]=0;G.flag=G.s.t;render();return}upClk()},250);
+const P={pc:'N',col:'w',sq:27};
+const RS={aberturas:{i:0,k:0},taticas:{i:0,k:0}},cache={};
+const TABS=[['jogar','♞ Jogar'],['download','⬇ Descarregar'],['pecas','♛ Peças'],['puzzles','🧩 Puzzles'],['regras','📜 Regras'],['aberturas','♟ Aberturas'],['taticas','⚡ Táticas'],['finais','♚ Finais'],['notacao','✎ Notação'],['perfil','👤 Perfil'],['config','⚙ Definições']];
+let tab=TABS.some(t=>t[0]==location.hash.slice(1))?location.hash.slice(1):'jogar';
+function bh(s,o){let h=`<div class="bd${(THEMES[ST.th]||[])[3]?' im':''}">`;for(let n=0;n<64;n++){const i=o.flip?63-n:n,p=s.b[i],r=i>>3,c=i&7;let cl='sq '+((r+c)%2?'d':'l');
+ if(o.last&&o.last.includes(i))cl+=' lm';if(o.sel==i)cl+=' sel';if(o.ck==i)cl+=' ck';if(o.tg&&(ST.hl||tab=='pecas')&&o.tg.includes(i))cl+=' mv';
+ h+=`<div class="${cl}" data-q="${i}">${ST.co?crd(n,i):''}${p?`<span class="${p[0]=='w'?'pw':'pb'}">${GL[p[1]]}</span>`:''}</div>`}return h+'</div>'}
+const grp=(t,a,items,cur)=>`<div class="grp"><b>${t}</b>${items.map(([x,l])=>`<button class="btn ${cur==x?'on':''}" data-a="${a}" data-x="${x}">${l}</button>`).join('')}</div>`;
+/* JOGAR */
+function pgJogar(){if(G.srch)return pgSrch();const n=G.hs.length,vk=G.rv<0||G.rv>=n?n:G.rv,vs=vk==n?G.s:G.hs[vk].s,vl=vk==n?G.last:G.hs[vk].last,s=G.s,L=legal(s),c=chk(s),ended=over(s)||!!G.flag||!!G.resign;let st;if(G.resign){st=G.mode==1?(G.resign==G.me?'Desististe.':'O computador desistiu.')+' Ganham as '+(G.resign=='w'?'pretas':'brancas')+'.':`As ${G.resign=='w'?'brancas':'pretas'} desistiram. Ganham as ${G.resign=='w'?'pretas':'brancas'}.`;rec(G.resign==G.me?'d':'v')}else if(G.flag){st='Tempo esgotado! Ganham as '+(G.flag=='w'?'pretas':'brancas')+'.';rec(opp(G.flag)==G.me?'v':'d')}else if(ended)rec(!L.length&&c?(opp(s.t)==G.me?'v':'d'):'e');
+ if(G.flag||G.resign){}else if(!L.length)st=c?`Xeque-mate! Ganham as ${s.t=='w'?'pretas':'brancas'}.`:'Afogamento: empate.';
+ else if(s.h>=100)st='Empate pela regra dos 50 lances.';else if(s.b.filter(Boolean).length==2)st='Empate: material insuficiente.';
+ else st=(G.mode==1&&s.t!=G.me?'O computador está a pensar…':`Vez das ${s.t=='w'?'brancas':'pretas'}.`)+(c?' Xeque!':'');
+ let mv='';G.sans.forEach((x,j)=>mv+=(j%2?'':`<b>${j/2+1}.</b> `)+`<span class="${vk==j+1?'cur':''}" data-a="rv" data-x="${j+1}" style="cursor:pointer">${x}</span> `);
+ const pm=G.pm?`<div class="grp"><b>Promover a:</b>${G.pm.map((m,i)=>`<button class="btn" data-a="pm" data-x="${i}" style="font-size:26px">${GL[m.p]}</button>`).join('')}</div>`:'';
+ return `<div class="row"><div>${pb(G.flip?'w':'b')}${bh(vs,{flip:G.flip,sel:vk==n?G.sel:-1,tg:vk==n?G.tg:[],last:vl,ck:vk==n&&c?kq(s.b,s.t):-1})}${pb(G.flip?'b':'w')}<div class="card mvs">${mv||'Os lances aparecem aqui.'}</div></div>
+ <div class="side"><div class="card"><div class="st" style="color:${ended?'var(--r)':'var(--gr)'}">${st}</div>${pm}</div>
+ <div class="card" style="display:flex;flex-direction:column;gap:10px">
+ ${grp('Modo','mode',[[1,'Contra o computador'],[2,'2 jogadores']],G.mode)}
+ ${G.mode==1?grp('Jogas com','side',[['w','Brancas'],['b','Pretas']],G.me)+grp('Nível','lvl',[[1,'🤖 Novato ~400'],[2,'🤖 Clube ~1000'],[3,'🤖 Mestre ~1500']],G.lvl):''}
+ <button class="btn big" data-a="online">🌐 Jogar online</button>${grp('Tempo','tc',Object.entries(TCL),G.tc)}<div class="grp"><button class="btn" data-a="tab" data-x="config">⚙ Temas e definições</button></div><div class="grp"><b>Placar:</b>${S.v}V · ${S.e}E · ${S.d}D · Rating ${S.r||800}</div><div class="grp"><button class="btn" data-a="new">Novo jogo</button><button class="btn" data-a="resign" ${ended?'disabled':''}>Desistir</button><button class="btn" data-a="flip">Virar</button><button class="btn ${G.an?'on':''}" data-a="an">📊 Análise</button></div></div>
+ ${G.an?pgAn(vs,vk,n):''}<div class="card"><b class="h">Como jogar</b><br>Toca numa peça para ver as casas possíveis e depois toca no destino. O roque, o en passant e a promoção estão incluídos.</div></div></div>`}
+function doMove(m){const L=legal(G.s);G.rv=-1;G.hs.push({s:G.s,last:G.last,n:G.sans.length,tm:G.tm.slice()});if(G.tc!='0')G.tm[G.s.t=='w'?0:1]+=TC[G.tc][1];G.sans.push(san(G.s,m,L));G.s=mk(G.s,m);G.last=[m.f,m.t];snd(over(G.s)?'e':chk(G.s)?'k':G.hs[G.hs.length-1].s.b[m.t]?'c':'m');G.sel=-1;G.tg=[];G.pm=null;render();aiMove()}
+function aiMove(){if(G.mode!=1||G.s.t==G.me||G.flag||G.resign||over(G.s))return;setTimeout(()=>{if(G.mode!=1||G.s.t==G.me||G.flag||G.resign||over(G.s))return;doMove(pick(G.s,G.lvl))},80)}
+function gClick(i){const s=G.s;if(G.rv>=0&&G.rv<G.hs.length)return;if(over(s)||G.flag||G.resign||(G.mode==1&&s.t!=G.me))return;const L=legal(s),p=s.b[i];
+ if(G.sel>=0){const ms=L.filter(m=>m.f==G.sel&&m.t==i);if(ms.length){if(ms[0].p){G.pm=ms;render();return}doMove(ms[0]);return}}
+ if(p&&p[0]==s.t){G.sel=i;G.tg=L.filter(m=>m.f==i).map(m=>m.t)}else{G.sel=-1;G.tg=[]}G.pm=null;render()}
+function newGame(){Object.assign(G,{s:fen(START),hs:[],sans:[],sel:-1,tg:[],last:null,pm:null,tm:[TC[G.tc][0],TC[G.tc][0]],flag:'',resign:'',rec:0,rv:-1,cp:'',flip:G.mode==1&&G.me=='b'?1:0});render();aiMove()}
+function resignGame(){if(G.resign||G.flag||over(G.s))return;G.resign=G.mode==1?G.me:G.s.t;G.sel=-1;G.tg=[];G.pm=null;G.rv=-1;render()}
+const DESKTOP_DOWNLOAD_URL='https://github.com/D-DMr/xadrez/releases/latest/download/Xadrez-Total-Setup.exe';
+function pgDownload(){return `<div class="card" style="max-width:760px;margin:0 auto"><h2 class="h" style="font-size:28px">Joga no teu computador</h2><p>Instala o Xadrez Total no Windows e joga contra o computador, mesmo sem internet.</p><p><b>Windows 10/11 · 64 bits</b></p><a class="btn big" href="${DESKTOP_DOWNLOAD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none">⬇ Descarregar instalador (.exe)</a><p class="mut">O jogo e as tuas definições ficam neste computador. O início de sessão com Google está disponível na versão web e requer internet.</p><p class="mut">O Windows pode mostrar um aviso por o instalador não ter assinatura digital.</p></div>`}
+/* PEÇAS */
+const PI={K:['Rei','—','1 casa em qualquer direção. Nunca pode ficar em xeque. Faz o roque com a torre.'],Q:['Dama','9','Move-se como a torre e o bispo juntos: quantas casas quiseres em linha reta ou diagonal.'],R:['Torre','5','Linhas e colunas, sem saltar peças. Brilha em colunas abertas e nos finais.'],B:['Bispo','3','Diagonais, sem saltar peças. Fica sempre na mesma cor de casa.'],N:['Cavalo','3','Move-se em «L» (2 + 1) e é a única peça que salta por cima das outras.'],P:['Peão','1','Avança 1 casa (2 no primeiro lance) e captura na diagonal. Ao chegar ao fim, promove.']};
+function pgPecas(){const b=Array(64).fill(null);b[P.sq]=P.col+P.pc;const s={b,t:P.col,c:'',ep:-1,h:0},tg=gen(s).map(m=>m.t),i=PI[P.pc];
+ return `<div class="row"><div>${bh(s,{sel:P.sq,tg})}</div><div class="side"><div class="card">${grp('Peça','pc',Object.keys(PI).map(k=>[k,GL[k]+' '+PI[k][0]]),P.pc)}<div style="height:8px"></div>${grp('Cor','col',[['w','Brancas'],['b','Pretas']],P.col)}</div>
+ <div class="card" style="border-color:var(--p)"><h2 class="h" style="color:var(--p);font-size:28px">${GL[P.pc]} ${i[0]} <small style="font-size:18px">valor: ${i[1]}</small></h2><p>${i[2]}</p><p style="color:var(--mut)">Toca em qualquer casa para mover a peça e ver para onde pode ir (pontos verdes).</p></div></div></div>`}
+/* CONTA E TEMAS */
+const IP='background:var(--bg);color:var(--ink);border:1px solid var(--mut);border-radius:6px;padding:6px 8px;font:inherit';let CM='';
+let firebaseUser=null,firebaseAuthReady=false,firebaseAuthMessage='';
+const DESKTOP_APP=/Electron\//.test(navigator.userAgent);
+const htmlEsc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+document.addEventListener('firebase-auth-state',e=>{firebaseAuthReady=e.detail.ready;firebaseUser=e.detail.user;ST.u=firebaseUser?{n:clean(firebaseUser.displayName||firebaseUser.email),a:AVS[0]}:null;sv();render()});
+document.addEventListener('firebase-auth-message',e=>{firebaseAuthMessage=e.detail.message;render()});
+setTimeout(()=>{if(!firebaseAuthReady){firebaseAuthMessage='Não foi possível ligar à autenticação Firebase. Verifica a ligação à internet e tenta atualizar a página.';render()}},10000);
+function addCT(o){const n=clean(o&&o.n),l=o&&o.l,d=o&&o.d,im=(o&&o.img)||'';if(!n||!hx.test(l)||!hx.test(d)||(im&&(!imx.test(im)||im.length>600000)))return CM='Tema inválido (precisa de nome e duas cores).';if(ST.ct.length>=6)return CM='Máximo de 6 temas criados. Apaga alguns primeiro.';ST.ct.push({n,l,d,img:im});THEMES.push([l,d,n,im]);ST.th=THEMES.length-1;sv();CM='Tema «'+n+'» guardado e ativado.'}
+document.addEventListener('change',e=>{const f=e.target.id=='tf'&&e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),s=Math.min(im.width,im.height);c.width=c.height=480;c.getContext('2d').drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,480,480);addCT({n:f.name.replace(/\.[^.]+$/,''),l:'#e0e0e0',d:'#777777',img:c.toDataURL('image/jpeg',.7)});render()};im.onerror=()=>{CM='Não consegui ler essa imagem.';render()};im.src=rd.result};rd.readAsDataURL(f)});
+const acct=()=>firebaseUser?`<div class="card" style="margin-top:10px;padding:8px 12px"><span class="av">${AVS[0]}</span> <b>${htmlEsc(firebaseUser.displayName||'Conta Google')}</b><br><small>${htmlEsc(firebaseUser.email)}</small><br><button class="btn" data-a="logout" style="min-height:36px;margin-top:6px">Sair</button></div>`:`<button class="btn big" style="font-size:16px;min-height:44px;margin-top:10px" data-a="tab" data-x="perfil">👤 Iniciar sessão</button>`;
+function pgConta(){const u=firebaseUser,login=DESKTOP_APP?'<p class="mut">O início de sessão com Google está disponível na <a href="https://xadrez-3a613.firebaseapp.com/" target="_blank" rel="noopener">versão web</a>.</p>':`<p class="mut">${firebaseAuthReady?'Inicia sessão com a tua conta Google.':'A ligar à autenticação…'}</p><button class="btn big" style="width:auto;font-size:17px;min-height:44px" data-a="goog" ${firebaseAuthReady?'':'disabled'}>Entrar com o Google</button>`;return `<div class="card" style="margin-top:12px"><h3 class="h" style="font-size:22px">🔐 Conta Google</h3>${u?`<p>Sessão iniciada como <b>${htmlEsc(u.displayName||'')}</b><br><span class="mut">${htmlEsc(u.email)}</span></p><button class="btn" data-a="logout">Sair</button>`:login}<p class="mut">O email e a data/hora de cada entrada são guardados no Firestore e só podem ser consultados pelos administradores do projeto.</p><p class="mut" role="status">${htmlEsc(firebaseAuthMessage)}</p><h4 class="h" style="margin:10px 0 4px">Levar as estatísticas para outro dispositivo</h4><textarea id="bk" rows="3" placeholder="Código de cópia de segurança" style="${IP};width:100%;box-sizing:border-box"></textarea><div class="grp" style="margin-top:6px"><button class="btn" data-a="bke">Exportar dados</button><button class="btn" data-a="bki">Importar dados</button></div></div>`}
+/* EXTRAS */
+const PGT=[['Escuro',['#312e2b','#262421','#fff','#a7a6a2','#81b64c']],['Claro',['#edeeea','#fff','#262421','#5c5b58','#5d9948']],['Meia-noite',['#0f172a','#1e293b','#f1f5f9','#94a3b8','#38bdf8']],['Roxo',['#1e1530','#2a1d45','#f3ecff','#b9a7dd','#a78bfa']],['Floresta',['#14231a','#1d3326','#e8f5e9','#9bbfa5','#4ade80']],['Rosa',['#2b1620','#3a1d2b','#ffe9f1','#d6a5b8','#f472b6']]],PS=['Clássicas','Ouro e prata','Neon','Contorno'];
+const crd=(n,i)=>(n%8==0?`<i class="co r">${8-(i>>3)}</i>`:'')+(n>55?`<i class="co f">${F[i&7]}</i>`:'');
+let AC;const snd=k=>{if(!ST.so)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value={m:440,c:300,k:660,e:220}[k];g.gain.value=.15;g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+.18);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.18)}catch(e){}};
+const cap=c=>{const o=opp(c),ct={};G.s.b.forEach(p=>{if(p&&p[0]==o)ct[p[1]]=(ct[p[1]]||0)+1});let g='';for(const k of'QRBNP')g+=GL[k].repeat(Math.max(0,{P:8,N:2,B:2,R:2,Q:1}[k]-(ct[k]||0)));const sc=x=>G.s.b.reduce((a,p)=>a+(p&&p[0]==x?V[p[1]]:0),0),d=Math.round((sc(c)-sc(o))/100);return g?`<span class="cap ${o=='w'?'pw':'pb'}">${g}</span>`+(d>0?` +${d}`:''):''};
+function pgPerfil(){const t=S.v+S.e+S.d,w=t?Math.round(100*S.v/t):0,nm={v:'Vitória',e:'Empate',d:'Derrota'},cl={v:'gr',e:'o',d:'r'};
+ return `<div class="grid"><div class="card" style="border-color:var(--b)"><h3 class="h" style="font-size:24px">👤 O teu perfil</h3><p class="st" style="font-size:44px;color:var(--b);margin:6px 0">${S.r||800}</p><p>Rating (simulado)</p><p>${S.v} V · ${S.e} E · ${S.d} D — ${w}% de vitórias (${t} jogos)</p><button class="btn" data-a="rst">Apagar estatísticas</button></div><div class="card"><h3 class="h" style="font-size:22px">Últimos jogos</h3>${(S.h||[]).map(x=>`<p style="margin:6px 0"><b style="color:var(--${cl[x.r]})">${nm[x.r]}</b> contra ${x.o} · ${x.t}</p>`).join('')||'<p>Ainda não jogaste contra o computador.</p>'}</div></div>`}
+function pgCfg(){const o=[[1,'Sim'],[0,'Não']],g=(t,k,it)=>`<div class="card">${grp(t,'set',it.map(([v,l])=>[k+':'+v,l]),k+':'+ST[k])}</div>`;
+ return `<div class="grid" style="grid-template-columns:1fr">${g('Tema da página','pt',PGT.map((p,i)=>[i,p[0]]))}${g('Tabuleiro','th',THEMES.map((t,i)=>[i,t[2]]))}${g('Peças','ps',PS.map((p,i)=>[i,p]))}${g('Tamanho','bs',[[380,'Pequeno'],[480,'Médio'],[600,'Grande']])}${g('Coordenadas','co',o)}${g('Sons','so',o)}${g('Mostrar lances possíveis','hl',o)}<div class="card"><h3 class="h" style="font-size:22px">🎨 Criar ou importar tema de tabuleiro</h3><div class="grp" style="margin:8px 0"><input id="tn" placeholder="Nome do tema" maxlength="24" style="${IP}"> Clara <input type="color" id="tl" value="#f0d9b5"> Escura <input type="color" id="td" value="#b58863"><button class="btn" data-a="ctn">Guardar</button></div><div class="grp"><label class="btn" style="cursor:pointer;display:inline-flex;align-items:center">🖼 Importar imagem<input id="tf" type="file" accept="image/*" hidden></label><button class="btn" data-a="dct">Apagar criados</button></div><p class="mut">Descarrega uma imagem de tabuleiro (por exemplo do Google Imagens) e importa-a daqui. Fica guardada só neste navegador.</p><textarea id="tc" rows="3" placeholder="Código do tema (cola aqui para importar)" style="${IP};width:100%;box-sizing:border-box"></textarea><div class="grp" style="margin-top:6px"><button class="btn" data-a="cte">Exportar tema atual</button><button class="btn" data-a="cti">Importar código</button></div><p class="mut">${CM}</p></div><div class="card"><button class="btn" data-a="def">Repor definições</button></div></div><div style="margin-top:14px">${bh(fen(START),{})}</div>`}
+/* ANÁLISE */
+const eng=x=>x.replace(/^[RDTC]/,c=>({R:'K',D:'Q',T:'R',C:'N'}[c])).replace(/=([DTC])/,(m,c)=>'='+{D:'Q',T:'R',C:'N'}[c]);
+function pgn(){const s=G.s,L=legal(s),r=G.resign?(G.resign=='w'?'0-1':'1-0'):G.flag?(G.flag=='w'?'0-1':'1-0'):!L.length?(chk(s)?(s.t=='w'?'0-1':'1-0'):'1/2-1/2'):over(s)?'1/2-1/2':'*',nm=c=>G.mode!=1?(c=='w'?'Brancas':'Pretas'):c==G.me?(ST.u?ST.u.n:'Tu'):(G.opp?G.opp.n:'Computador');
+ let mv='';G.sans.forEach((x,j)=>mv+=(j%2?'':`${j/2+1}. `)+eng(x)+' ');
+ return `[Event "Xadrez Total"]\n[Date "${new Date().toISOString().slice(0,10).replace(/-/g,'.')}"]\n[White "${nm('w')}"]\n[Black "${nm('b')}"]\n[Result "${r}"]\n\n${mv}${r}`}
+function pgAn(vs,vk,n){const e=(vs.t=='w'?1:-1)*ab(vs,2,-1e9,1e9,0),m=Math.abs(e)>90000,tx=m?'Mate':(e>=0?'+':'')+(e/100).toFixed(1),p=m?(e>0?100:0):50+50*Math.tanh(e/400);
+ return `<div class="card" style="border-color:var(--b)"><h3 class="h" style="font-size:22px;color:var(--b)">📊 Análise</h3><div style="display:flex;height:24px;border-radius:6px;overflow:hidden;margin:8px 0;background:#262421"><div style="width:${p}%;background:#fff;color:#262421;font-weight:800;font-size:14px;padding-left:6px">${e>=0?tx:''}</div><div style="flex:1;color:#fff;font-weight:800;font-size:14px;text-align:right;padding-right:6px">${e<0?tx:''}</div></div><small class="mut">Barra: brancas à esquerda. Motor próprio, profundidade 2: indicativo.</small>
+ <div class="grp" style="margin-top:8px"><button class="btn" data-a="rv" data-x="0">⏮</button><button class="btn" data-a="rv" data-x="${Math.max(0,vk-1)}">◀</button><button class="btn" data-a="rv" data-x="${Math.min(n,vk+1)}">▶</button><button class="btn" data-a="rv" data-x="${n}">⏭</button></div>
+ <textarea id="pgn" readonly rows="5" style="width:100%;margin-top:8px;box-sizing:border-box;background:var(--bg);color:var(--ink);border:1px solid var(--mut);border-radius:6px;font-family:monospace">${pgn()}</textarea><div class="grp" style="margin-top:6px"><button class="btn" data-a="cp">Copiar PGN</button><span>${G.cp||''}</span></div></div>`}
+/* ONLINE (simulado) */
+const NM=['TacticaPT','Rainha_Dama','XequeMateLuis','DonaTorre','Cavalo_Bravo','Peao_Zen','Bispo77','Gambito_Lis'];
+function match(){const l=1+Math.random()*3|0;G.srch=0;G.opp={n:NM[Math.random()*NM.length|0],r:[400,1000,1500][l-1]+(Math.random()*160-80|0)};G.mode=1;G.lvl=l;G.me=Math.random()<.5?'w':'b';if(G.tc=='0')G.tc='10';newGame()}
+function pgSrch(){return `<div class="card srch"><div class="spin"></div><h2 class="h" style="font-size:28px">A procurar jogadores…</h2><p>${TCL[G.tc=='0'?'10':G.tc]} · jogo classificado</p><p class="mut">Modo online simulado: não há servidor, por isso o adversário será um bot.</p><button class="btn" data-a="cancel">Cancelar</button></div>`}
+const pb=c=>{const o=G.mode==1&&c!=G.me,n=G.mode!=1?(c=='w'?'Brancas':'Pretas'):o?(G.opp?G.opp.n:'Computador'):(ST.u?ST.u.n:'Tu'),r=G.opp&&G.mode==1?` (${o?G.opp.r:S.r||800})`:'';return `<div class="pbar"><span><span class="av">${o?'🤖':(ST.u?ST.u.a:'🙂')}</span> <b>${n}</b>${r}${o&&G.opp?' <small>· simulado</small>':''}</span><span>${cap(c)}</span>${clk(c)}</div>`};
+/* PUZZLES */
+const PZ=[['Mate nas filas de trás','6k1/5ppp/8/8/8/8/5PPP/3R2K1','d1d8','O rei está preso atrás dos seus próprios peões.'],['Mate da dama','6k1/5ppp/8/8/8/8/5PPP/Q5K1','a1a8','Uma dama na oitava fila é mate quando o rei não tem fuga.'],['Mate do pastor','r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR','h5f7','A dama, protegida pelo bispo, entra em f7.'],['Rei e torre','6k1/8/6K1/8/8/8/8/R7','a1a8','O teu rei corta as fugas e a torre dá o xeque final.'],['Garfo do cavalo','r3k3/8/8/3N4/8/8/8/4K3','d5c7','Xeque ao rei e ataque à torre ao mesmo tempo!'],['Dama e rei','7k/8/5KQ1/8/8/8/8/8','g6g7','A dama ao lado do rei, protegida por ele, não deixa fuga.'],['Escada de torre','1k6/8/1K6/8/8/8/8/7R','h1h8','O rei fecha a fila 7 e a torre dá mate na 8.'],['Mate sufocado','6rk/6pp/8/6N1/8/8/8/6K1','g5f7','O rei está cercado pelas suas peças: só o cavalo o consegue atacar.']];
+const Z={i:0,s:null,sel:-1,tg:[],msg:'',ok:0};
+function zInit(i){Z.i=i;Z.s={...fen(PZ[i][1]),c:''};Z.sel=-1;Z.tg=[];Z.msg='';Z.ok=0}zInit(0);
+function zClick(i){if(Z.ok)return;const s=Z.s,L=legal(s),p=s.b[i];
+ if(Z.sel>=0){const m=L.find(y=>y.f==Z.sel&&y.t==i);if(m){if(sqn(m.f)+sqn(m.t)==PZ[Z.i][2]){Z.s=mk(s,m);Z.ok=1;Z.msg='✅ Correto! '+PZ[Z.i][3]}else Z.msg='❌ Não é esse. Tenta outra vez.';Z.sel=-1;Z.tg=[];render();return}}
+ if(p&&p[0]==s.t){Z.sel=i;Z.tg=L.filter(m=>m.f==i).map(m=>m.t)}else{Z.sel=-1;Z.tg=[]}render()}
+function pgPz(){return `<div class="row"><div>${bh(Z.s,{sel:Z.sel,tg:Z.tg})}</div><div class="side"><div class="card" style="border-color:var(--p)"><h2 class="h" style="color:var(--p);font-size:26px">🧩 ${PZ[Z.i][0]}</h2><p>As brancas jogam e ganham. Encontra o melhor lance!</p><div class="st" style="color:var(--gr)">${Z.msg}</div></div><div class="card">${grp('Puzzle','zp',PZ.map((p,i)=>[i,i+1]),Z.i)}<div class="grp" style="margin-top:8px"><button class="btn" data-a="zr">Recomeçar</button></div></div></div></div>`}
+/* TEXTOS */
+const TXT={
+regras:[['Objetivo','b','Dar <b>xeque-mate</b> ao rei adversário: o rei está atacado e não há maneira de o salvar.'],['Roque','p','O rei move 2 casas para a torre e a torre salta para o outro lado. Só se nenhum dos dois se moveu, não há peças no meio e o rei não passa por casas atacadas nem está em xeque.'],['En passant','gr','Se um peão avança 2 casas e fica ao lado de um peão adversário, este pode captura-lo como se tivesse avançado só 1. Só no lance imediato.'],['Promoção','o','Um peão que chega à última fila transforma-se em dama, torre, bispo ou cavalo (quase sempre dama).'],['Xeque','r','O rei está atacado. Tens de o resolver: mover o rei, capturar a peça atacante ou bloquear.'],['Empates','b','Afogamento (sem lances legais e sem xeque), repetição tripla, regra dos 50 lances, material insuficiente ou acordo.']],
+finais:[['Rei + Dama contra Rei','b','Aproxima o rei e usa a dama para encurralar o rei adversário. Cuidado com o afogamento!'],['Rei + Torre contra Rei','p','Método da «caixa»: a torre corta o rei, o teu rei aproxima-se e dá-se mate na borda.'],['Oposição','gr','Os reis frente a frente com uma casa no meio: quem não tem de mover, ganha. Decisiva em finais de peões.'],['Regra do quadrado','o','Desenha um quadrado desde o peão até à última fila: se o rei adversário entra nele, apanha o peão.'],['Peão passado','r','Sem peões adversários à frente nem nas colunas vizinhas. É uma arma poderosa nos finais.'],['Torre atrás do peão','b','Coloca a torre atrás do peão passado, o teu ou o do adversário: ganha força a cada passo.']],
+notacao:[['Casas','b','Colunas <b>a–h</b> da esquerda para a direita e filas <b>1–8</b> das brancas para as pretas. Ex.: <b>e4</b>.'],['Peças (PT)','p','<b>R</b> rei · <b>D</b> dama · <b>T</b> torre · <b>B</b> bispo · <b>C</b> cavalo. Os peões não levam letra.'],['Símbolos','gr','<b>x</b> captura · <b>+</b> xeque · <b>#</b> mate · <b>O-O</b> roque curto · <b>O-O-O</b> roque longo · <b>=D</b> promoção.'],['Exemplo','o','<b>1. e4 e5 2. Cf3 Cc6 3. Bb5</b>: Ruy López. Cada número tem um lance das brancas e um das pretas.']]};
+const cards=a=>`<div class="grid">${a.map(([t,c,x])=>`<div class="card" style="border-color:var(--${c})"><h3 class="h" style="color:var(--${c});font-size:24px">${t}</h3><p style="margin:8px 0 0">${x}</p></div>`).join('')}</div>`;
+/* REPLAYS */
+const REP={aberturas:[
+{n:'Abertura Italiana',d:'Desenvolve depressa e aponta a f7. Ótima para começar.',m:'e2e4 e7e5 g1f3 b8c6 f1c4 f8c5'},
+{n:'Ruy López',d:'Pressão sobre o cavalo que defende e5. Clássica há 500 anos.',m:'e2e4 e7e5 g1f3 b8c6 f1b5 a7a6'},
+{n:'Defesa Siciliana',d:'A resposta mais combativa a 1.e4: assimetria e luta pelo centro.',m:'e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6'},
+{n:'Gambito da Dama',d:'Oferece um peão de flanco para dominar o centro.',m:'d2d4 d7d5 c2c4 e7e6 b1c3 g8f6'},
+{n:'Defesa Francesa',d:'Sólida: peões em e6 e d5 e contra-ataque no centro.',m:'e2e4 e7e6 d2d4 d7d5 b1c3 g8f6'},
+{n:'Abertura Inglesa',d:'Flanco da dama primeiro, jogo posicional e flexível.',m:'c2c4 e7e5 b1c3 g8f6 g2g3 d7d5'}],
+taticas:[
+{n:'Mate do pastor',d:'4 lances: Dama + Bispo contra f7. Aprende a defender-te!',m:'e2e4 e7e5 d1h5 b8c6 f1c4 g8f6 h5f7'},
+{n:'Mate do louco',d:'O mais rápido possível: 2 lances das pretas.',m:'f2f3 e7e5 g2g4 d8h4'},
+{n:'Cravada (Ruy López)',d:'O bispo crava o cavalo contra o rei: ele não pode sair.',m:'e2e4 e7e5 g1f3 b8c6 f1b5'},
+{n:'A Ópera de Morphy',d:'Paul Morphy, 1858: desenvolvimento, sacrifícios e mate em d8.',m:'e2e4 e7e5 g1f3 d7d6 d2d4 c8g4 d4e5 g4f3 d1f3 d6e5 f1c4 g8f6 f3b3 d8e7 b1c3 c7c6 c1g5 b7b5 c3b5 c6b5 c4b5 b8d7 e1c1 a8d8 d1d7 d8d7 h1d1 e7e6 b5d7 f6d7 b3b8 d7b8 d1d8'}]};
+TXT.taticas=[['Garfo','o','Uma peça ataca duas ao mesmo tempo. O cavalo é o rei dos garfos.'],['Cravada','p','Uma peça não se pode mover porque deixaria outra, mais valiosa, exposta.'],['Espetada','b','Como a cravada, mas a peça valiosa está à frente e tem de se afastar.'],['Ataque descoberto','gr','Ao mover uma peça, abres a linha de outra que ataca o alvo.']];
+function bld(str){const ss=[fen(START)],sa=[],lm=[null];let s=ss[0];for(const w of str.split(' ')){const f=F.indexOf(w[0])+8*(8-+w[1]),t=F.indexOf(w[2])+8*(8-+w[3]),L=legal(s),m=L.find(y=>y.f==f&&y.t==t&&(!y.p||y.p=='Q'));if(!m)break;sa.push(san(s,m,L));s=mk(s,m);ss.push(s);lm.push([f,t])}return{ss,sa,lm}}
+const cur=t=>{const m=REP[t][RS[t].i].m;return cache[m]||(cache[m]=bld(m))};
+function pgRep(t){const R=RS[t],B=cur(t),k=R.k;
+ const list=REP[t].map((x,i)=>`<button class="item ${i==R.i?'on':''}" data-a="rp" data-x="${i}"><b>${x.n}</b><br><span>${x.d}</span></button>`).join('');
+ const mv=B.sa.map((x,j)=>`<span class="${j+1==k?'cur':''}">${j%2?'':`<b>${j/2+1}.</b> `}${x}</span>`).join(' ');
+ return `<div class="row"><div class="side">${list}</div><div>${bh(B.ss[k],{last:B.lm[k]})}<div class="ctl"><button class="btn" data-a="rs" data-x="-99">⏮</button><button class="btn" data-a="rs" data-x="-1">◀</button><button class="btn" data-a="rs" data-x="1">▶</button><button class="btn" data-a="rs" data-x="99">⏭</button></div><div class="card mvs">${mv}</div></div></div>${t=='taticas'?cards(TXT.taticas):''}`}
+/* RENDER */
+function render(){const pages={jogar:pgJogar,download:pgDownload,puzzles:pgPz,perfil:()=>pgPerfil()+pgConta(),config:pgCfg,pecas:pgPecas,aberturas:()=>pgRep('aberturas'),taticas:()=>pgRep('taticas')};
+ $('app').innerHTML=`<div class="shell"><aside><div class="logo"><svg width="34" height="34" viewBox="0 0 34 34" style="vertical-align:-8px;margin-right:8px" aria-hidden="true"><rect width="34" height="34" rx="8" fill="#81b64c"/><text x="17" y="26" font-size="24" text-anchor="middle" fill="#fff">♞</text></svg>Xadrez<b>Total</b></div>
+ <nav>${TABS.filter(([id])=>!DESKTOP_APP||id=='jogar'||id=='config').map(([id,l])=>`<button class="tab" ${id==tab?'aria-current="page"':''} data-a="tab" data-x="${id}">${l}</button>`).join('')}</nav>${DESKTOP_APP?'':acct()}</aside><main>
+ ${pages[tab]?pages[tab]():cards(TXT[tab])}</main></div>`;document.title='Xadrez Total — '+TABS.find(t=>t[0]==tab)[1].slice(2);applyTh();upClk();document.body.classList.toggle('searching',!!G.srch&&tab=='jogar')}
+function act(a,x){
+ if(a=='tab'){CM='';location.hash=x;return}
+ if(['mode','side','lvl','tc'].includes(a))G.opp=0;
+ if(a=='online'){if(tab!='jogar')location.hash='jogar';const id=G.sid=Date.now();G.srch=1;render();setTimeout(()=>{if(G.sid==id&&G.srch)match()},2500+Math.random()*2500);return}
+ if(a=='cancel'){G.srch=0;G.sid=0;render();return}
+ if(a=='mode'){G.mode=+x;newGame();return}
+ if(a=='side'){G.me=x;newGame();return}
+ if(a=='lvl'){G.lvl=+x}if(a=='rv'){const k=+x;G.rv=k>=G.hs.length?-1:k;G.cp=''}if(a=='an'){G.an^=1}if(a=='cp'){const t=$('pgn');t.select();const ok=()=>{G.cp='Copiado!';render()};try{navigator.clipboard.writeText(t.value).then(ok,()=>{document.execCommand('copy');ok()})}catch(e){document.execCommand('copy');ok()}return}if(a=='tc'){G.tc=x;newGame();return}if(a=='set'){const[k,v]=x.split(':');ST[k]=+v;sv()}if(a=='def'){Object.assign(ST,{pt:0,th:1,ps:0,co:1,so:1,hl:1,bs:480});sv()}
+ if(a=='ctn')addCT({n:$('tn').value,l:$('tl').value,d:$('td').value});
+ if(a=='cti'){try{addCT(JSON.parse($('tc').value))}catch(e){CM='Código inválido.'}}
+ if(a=='dct'){ST.ct=[];THEMES.length=7;ST.th=1;sv();CM='Temas criados apagados.'}
+ if(a=='cte'){const t=THEMES[ST.th];CM='Código gerado: copia-o abaixo.';render();$('tc').value=JSON.stringify({n:t[2],l:t[0],d:t[1],img:t[3]||''});$('tc').select();return}
+ if(a=='logout'){window.dispatchEvent(new Event('firebase-google-signout'));return}
+ if(a=='goog'){firebaseAuthMessage='';window.dispatchEvent(new Event('firebase-google-signin'));return}
+ if(a=='bke'){CM='Copia o código abaixo para o outro dispositivo.';render();$('bk').value=JSON.stringify({v:S.v,e:S.e,d:S.d,r:S.r,u:ST.u});$('bk').select();return}
+ if(a=='bki'){try{const o=JSON.parse($('bk').value),f=k=>Math.max(0,Math.min(99999,+o[k]|0));S.v=f('v');S.e=f('e');S.d=f('d');S.r=Math.max(100,Math.min(4000,+o.r|0||800));if(o.u&&AVS.includes(o.u.a)&&clean(o.u.n))ST.u={n:clean(o.u.n),a:o.u.a};saveS();sv();CM='Dados importados.'}catch(e){CM='Código inválido.'}}if(a=='rst'){S={v:0,e:0,d:0,r:800,h:[]};try{localStorage.removeItem('xz')}catch(e){}}if(a=='zp'){zInit(+x)}if(a=='zr'){zInit(Z.i)}
+ if(a=='new'){newGame();return}
+ if(a=='resign'){resignGame();return}
+ if(a=='flip'){G.flip^=1}
+ if(a=='pm'){doMove(G.pm[+x]);return}
+ if(a=='pc'){P.pc=x;if(x=='P'&&(P.sq<8||P.sq>55))P.sq=35}
+ if(a=='col')P.col=x;
+ if(a=='rp'){RS[tab].i=+x;RS[tab].k=0}
+ if(a=='rs'){const R=RS[tab],n=cur(tab).sa.length;R.k=Math.max(0,Math.min(n,x=='-99'?0:x=='99'?n:R.k+ +x))}
+ render()}
+document.addEventListener('click',e=>{const q=e.target.closest('[data-q]');
+ if(q){const i=+q.dataset.q;if(tab=='jogar')gClick(i);else if(tab=='puzzles')zClick(i);else if(tab=='pecas'){if(!(P.pc=='P'&&(i<8||i>55))){P.sq=i;render()}}return}
+ const a=e.target.closest('[data-a]');if(a)act(a.dataset.a,a.dataset.x)});
+window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(TABS.some(t=>t[0]==id)){tab=id;render();window.scrollTo(0,0)}});
+render();
+</script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
+import { getAuth, GoogleAuthProvider, getRedirectResult, onAuthStateChanged, signInWithRedirect, signOut } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
+import { getFirestore, addDoc, collection, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
+const app=initializeApp({apiKey:'AIzaSyB0YYPdPXyvthU1autG611fsjfoSgxDZk0',authDomain:'xadrez-3a613.firebaseapp.com',projectId:'xadrez-3a613',storageBucket:'xadrez-3a613.firebasestorage.app',messagingSenderId:'424719795420',appId:'1:424719795420:web:6fb57386b78b51d97aa019'});
+const auth=getAuth(app),db=getFirestore(app),provider=new GoogleAuthProvider();
+const send=(name,detail)=>document.dispatchEvent(new CustomEvent(name,{detail}));
+onAuthStateChanged(auth,user=>send('firebase-auth-state',{ready:true,user:user?{uid:user.uid,email:user.email,displayName:user.displayName}:null}),error=>{send('firebase-auth-state',{ready:true,user:null});send('firebase-auth-message',{message:'Falha ao verificar a sessão: '+error.message})});
+const recordLogin=async user=>{
+  try{
+    if(!user.email)throw new Error('A conta Google não disponibilizou um email.');
+    await addDoc(collection(db,'login_events'),{uid:user.uid,email:user.email,loggedAt:serverTimestamp()});
+    send('firebase-auth-message',{message:'Sessão iniciada; entrada registada de forma privada.'})
+  }catch(error){send('firebase-auth-message',{message:'A sessão foi iniciada, mas não foi possível guardar a entrada no Firestore: '+error.message})}
+};
+getRedirectResult(auth).then(result=>{if(result?.user)return recordLogin(result.user)}).catch(error=>send('firebase-auth-message',{message:'Não foi possível concluir o início de sessão: '+error.message}));
+window.addEventListener('firebase-google-signin',async()=>{
+  try{await signInWithRedirect(auth,provider)}
+  catch(error){
+    const message=error.code=='auth/operation-not-allowed'?'Ativa o fornecedor Google em Firebase Console > Authentication > Sign-in method.':error.code=='auth/unauthorized-domain'?'Autoriza xadrez-3a613.firebaseapp.com em Firebase Console > Authentication > Settings > Authorized domains.':'Não foi possível iniciar sessão: '+error.message;
+    send('firebase-auth-message',{message});return
+  }
+});
+window.addEventListener('firebase-google-signout',async()=>{
+  try{await signOut(auth);send('firebase-auth-message',{message:'Sessão terminada.'})}
+  catch(error){send('firebase-auth-message',{message:'Não foi possível terminar a sessão: '+error.message})}
+});
+</script></body></html>
