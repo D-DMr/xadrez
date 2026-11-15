@@ -7,7 +7,7 @@ const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const gamePage = path.resolve(__dirname, '../public/index.html');
 const preloadPage = path.resolve(__dirname, 'preload.cjs');
 const gameUrl = pathToFileURL(gamePage).href;
-const googleDesktopClientId = '424719795420-3fb0dnjsvuekpng6sjb9dqt6d1jbs47j.apps.googleusercontent.com';
+const googleDesktopClientId = '424719795420-37c0n990t8o9orb9486rrefp0n7p2gb7.apps.googleusercontent.com';
 const hasSingleInstanceLock = app.requestSingleInstanceLock();
 let signInInProgress = null;
 
@@ -24,7 +24,7 @@ function signInWithGoogle() {
 
     const server = http.createServer(async (request, response) => {
       const callback = new URL(request.url, 'http://127.0.0.1');
-      if (request.method !== 'GET' || callback.pathname !== '/oauth2callback') {
+      if (request.method !== 'GET' || callback.pathname !== '/') {
         response.writeHead(404).end();
         return;
       }
@@ -71,7 +71,7 @@ function signInWithGoogle() {
     server.on('error', finish);
     server.listen(0, '127.0.0.1', async () => {
       const address = server.address();
-      redirectUri = `http://127.0.0.1:${address.port}/oauth2callback`;
+      redirectUri = `http://127.0.0.1:${address.port}`;
       const authorizationUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
       authorizationUrl.search = new URLSearchParams({
         client_id: googleDesktopClientId,
@@ -122,7 +122,9 @@ function createWindow() {
     height: 850,
     minWidth: 360,
     minHeight: 500,
-    autoHideMenuBar: true,
+    title: 'Xadrez Total',
+    icon: path.resolve(__dirname, 'icon.ico'),
+    frame: false,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
@@ -138,7 +140,25 @@ function createWindow() {
   window.webContents.on('will-navigate', (event, url) => {
     if (url !== gameUrl) event.preventDefault();
   });
+  window.webContents.on('before-input-event', (event, input) => {
+    if (input.key === 'F11') {
+      event.preventDefault();
+      window.setFullScreen(!window.isFullScreen());
+    } else if (input.key === 'Escape' && window.isFullScreen()) {
+      window.setFullScreen(false);
+    }
+  });
   window.loadFile(gamePage);
+}
+
+function getGameWindow(event) {
+  const window = BrowserWindow.getAllWindows()[0];
+  const senderUrl = new URL(event.senderFrame.url);
+  if (!window || event.sender !== window.webContents ||
+      senderUrl.protocol !== 'file:' || path.resolve(fileURLToPath(senderUrl)) !== gamePage) {
+    throw new Error('Window controls can only be used by the game window.');
+  }
+  return window;
 }
 
 if (!hasSingleInstanceLock) {
@@ -154,13 +174,19 @@ if (!hasSingleInstanceLock) {
 
   app.whenReady().then(() => {
     ipcMain.handle('desktop-google-signin', event => {
-      const window = BrowserWindow.getAllWindows()[0];
-      const senderUrl = new URL(event.senderFrame.url);
-      if (!window || event.sender !== window.webContents ||
-          senderUrl.protocol !== 'file:' || path.resolve(fileURLToPath(senderUrl)) !== gamePage) {
-        throw new Error('Sign-in can only be started from the game window.');
-      }
+      getGameWindow(event);
       return signInWithGoogle();
+    });
+    ipcMain.handle('desktop-window-control', (event, control) => {
+      const window = getGameWindow(event);
+      if (control === 'minimize') window.minimize();
+      else if (control === 'toggle-maximize') {
+        if (window.isMaximized()) window.unmaximize();
+        else window.maximize();
+      } else if (control === 'toggle-fullscreen') {
+        window.setFullScreen(!window.isFullScreen());
+      } else if (control === 'close') window.close();
+      else throw new Error('Unknown window control.');
     });
     createWindow();
     app.on('activate', () => {

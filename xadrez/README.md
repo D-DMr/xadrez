@@ -11,7 +11,9 @@ npm run build:win
 
 O executável é criado em `dist/Xadrez-Total.exe`. É um `.exe` portátil: não tem assistente de instalação; a primeira execução extrai os componentes necessários para uma pasta temporária. Para publicar uma nova versão para download, envia uma tag `v*`. O workflow em `.github/workflows/release-windows.yml` cria uma GitHub Release e anexa o executável. A aba **Descarregar** do site aponta para o ficheiro da última release.
 
-O tabuleiro, puzzles, regras, aberturas, táticas, definições e partidas contra o computador funcionam offline. O início de sessão Google usa o navegador predefinido e um fluxo OAuth de aplicação instalada com PKCE; precisa de internet. A aplicação impede que duas janelas independentes sejam abertas pelo mesmo utilizador; os processos auxiliares do Chromium/Electron fazem parte normal da aplicação.
+O tabuleiro, puzzles, regras, aberturas, táticas, definições e partidas contra o computador funcionam offline. O início de sessão Google usa o navegador predefinido e um fluxo OAuth de aplicação instalada com PKCE; precisa de internet. Para o ativar, `googleDesktopClientId` em `desktop/main.cjs` tem de ser um OAuth Client ID do tipo **Desktop app** criado no projeto Firebase/Google Cloud da aplicação; não uses um client ID Web nem um client secret. A aplicação impede que duas janelas independentes sejam abertas pelo mesmo utilizador; os processos auxiliares do Chromium/Electron fazem parte normal da aplicação.
+
+A janela usa o ícone do Xadrez Total e uma barra identificada com controlos para minimizar, maximizar/restaurar, ecrã inteiro e fechar. `F11` ativa ou termina o ecrã inteiro; `Esc` sai dele.
 
 ## Assinatura digital
 
