@@ -1,6 +1,14 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    function isPlayer(room) {
+      return request.auth.uid == room.whiteUid || request.auth.uid == room.blackUid;
+    }
+
     match /login_events/{eventId} {
       allow create: if request.auth != null
         && request.auth.token.email_verified == true
@@ -10,6 +18,123 @@ service cloud.firestore {
         && request.resource.data.email == request.auth.token.email
         && request.resource.data.loggedAt == request.time;
       allow read, update, delete: if false;
+    }
+
+    match /online_rooms/{roomId} {
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['hostUid', 'hostName', 'status', 'timeControl', 'createdAt'])
+        && request.resource.data.hostUid == request.auth.uid
+        && request.resource.data.hostName is string
+        && request.resource.data.hostName.size() > 0
+        && request.resource.data.hostName.size() <= 24
+        && request.resource.data.status == 'waiting'
+        && request.resource.data.timeControl in ['1', '3', '10', '30']
+        && request.resource.data.createdAt == request.time;
+
+      allow get: if signedIn()
+        && (resource.data.status == 'waiting' || isPlayer(resource.data));
+      allow list: if signedIn() && resource.data.status == 'waiting';
+
+      allow update: if signedIn() && (joinRoom() || playMove(roomId) || resignRoom());
+      allow delete: if signedIn()
+        && ((resource.data.status == 'waiting' && resource.data.hostUid == request.auth.uid)
+          || (resource.data.status == 'waiting'
+            && resource.data.createdAt < request.time - duration.value(2, 'm')));
+
+      function joinRoom() {
+        let room = resource.data;
+        let next = request.resource.data;
+        return room.status == 'waiting'
+          && room.hostUid != request.auth.uid
+          && next.status == 'active'
+          && next.hostUid == room.hostUid
+          && next.hostName == room.hostName
+          && next.timeControl == room.timeControl
+          && next.createdAt == room.createdAt
+          && next.guestUid == request.auth.uid
+          && next.guestName is string
+          && next.guestName.size() > 0
+          && next.guestName.size() <= 24
+          && next.whiteUid != next.blackUid
+          && next.turnUid == next.whiteUid
+          && next.ply == 0
+          && next.lastMoveId == ''
+          && next.whiteUid in [room.hostUid, request.auth.uid]
+          && next.blackUid in [room.hostUid, request.auth.uid]
+          && ((next.whiteUid == room.hostUid && next.whiteName == room.hostName
+              && next.blackUid == request.auth.uid && next.blackName == next.guestName)
+            || (next.whiteUid == request.auth.uid && next.whiteName == next.guestName
+              && next.blackUid == room.hostUid && next.blackName == room.hostName))
+          && next.updatedAt == request.time
+          && next.keys().hasOnly(['hostUid', 'hostName', 'status', 'timeControl', 'createdAt',
+            'guestUid', 'guestName', 'whiteUid', 'blackUid', 'whiteName', 'blackName',
+            'ply', 'turnUid', 'lastMoveId', 'updatedAt']);
+      }
+
+      function playMove(roomId) {
+        let room = resource.data;
+        let next = request.resource.data;
+        let movePath = /databases/$(database)/documents/online_rooms/$(roomId)/moves/$(next.lastMoveId);
+        return room.status == 'active'
+          && request.auth.uid == room.turnUid
+          && next.status == 'active'
+          && next.ply == room.ply + 1
+          && next.turnUid == (room.turnUid == room.whiteUid ? room.blackUid : room.whiteUid)
+          && next.updatedAt == request.time
+          && next.lastMoveId is string
+          && existsAfter(movePath)
+          && getAfter(movePath).data.uid == request.auth.uid
+          && getAfter(movePath).data.ply == room.ply
+          && next.diff(room).affectedKeys().hasOnly(['ply', 'turnUid', 'lastMoveId', 'updatedAt']);
+      }
+
+      function resignRoom() {
+        let room = resource.data;
+        let next = request.resource.data;
+        return room.status == 'active'
+          && isPlayer(room)
+          && next.status == 'finished'
+          && next.result == 'resign'
+          && next.endedBy == request.auth.uid
+          && next.winnerUid == (request.auth.uid == room.whiteUid ? room.blackUid : room.whiteUid)
+          && next.endedAt == request.time
+          && next.diff(room).affectedKeys().hasOnly(['status', 'result', 'endedBy', 'winnerUid', 'endedAt']);
+      }
+
+      match /moves/{moveId} {
+        function parentRoom() {
+          return get(/databases/$(database)/documents/online_rooms/$(roomId)).data;
+        }
+
+        function nextRoom() {
+          return getAfter(/databases/$(database)/documents/online_rooms/$(roomId)).data;
+        }
+
+        allow get, list: if signedIn() && isPlayer(parentRoom());
+        allow create: if signedIn()
+          && parentRoom().status == 'active'
+          && request.auth.uid == parentRoom().turnUid
+          && request.resource.data.keys().hasOnly(['uid', 'ply', 'from', 'to', 'promotion'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.ply == parentRoom().ply
+          && request.resource.data.from is int
+          && request.resource.data.from >= 0
+          && request.resource.data.from < 64
+          && request.resource.data.to is int
+          && request.resource.data.to >= 0
+          && request.resource.data.to < 64
+          && request.resource.data.promotion in ['', 'Q', 'R', 'B', 'N']
+          && (request.resource.data.remainingTime == null
+            || (request.resource.data.remainingTime is number
+              && request.resource.data.remainingTime >= 0
+              && request.resource.data.remainingTime <= 1800))
+          && request.resource.data.createdAt == request.time
+          && nextRoom().ply == parentRoom().ply + 1
+          && nextRoom().turnUid == (parentRoom().turnUid == parentRoom().whiteUid
+            ? parentRoom().blackUid : parentRoom().whiteUid)
+          && nextRoom().lastMoveId == moveId;
+        allow update, delete: if false;
+      }
     }
   }
 }

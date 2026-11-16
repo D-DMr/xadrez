@@ -244,28 +244,29 @@ function bh(s,o){let h=`<div class="bd${(THEMES[ST.th]||[])[3]?' im':''}">`;for(
  h+=`<div class="${cl}" data-q="${i}">${ST.co?crd(n,i):''}${p?`<span class="${p[0]=='w'?'pw':'pb'}">${GL[p[1]]}</span>`:''}</div>`}return h+'</div>'}
 const grp=(t,a,items,cur)=>`<div class="grp"><b>${t}</b>${items.map(([x,l])=>`<button class="btn ${cur==x?'on':''}" data-a="${a}" data-x="${x}">${l}</button>`).join('')}</div>`;
 /* JOGAR */
-function pgJogar(){if(G.srch)return pgSrch();const n=G.hs.length,vk=G.rv<0||G.rv>=n?n:G.rv,vs=vk==n?G.s:G.hs[vk].s,vl=vk==n?G.last:G.hs[vk].last,s=G.s,L=legal(s),c=chk(s),ended=over(s)||!!G.flag||!!G.resign;let st;if(G.resign){st=G.mode==1?(G.resign==G.me?'Desististe.':'O computador desistiu.')+' Ganham as '+(G.resign=='w'?'pretas':'brancas')+'.':`As ${G.resign=='w'?'brancas':'pretas'} desistiram. Ganham as ${G.resign=='w'?'pretas':'brancas'}.`;rec(G.resign==G.me?'d':'v')}else if(G.flag){st='Tempo esgotado! Ganham as '+(G.flag=='w'?'pretas':'brancas')+'.';rec(opp(G.flag)==G.me?'v':'d')}else if(ended)rec(!L.length&&c?(opp(s.t)==G.me?'v':'d'):'e');
+function pgJogar(){if(G.srch)return pgSrch();const n=G.hs.length,vk=G.rv<0||G.rv>=n?n:G.rv,vs=vk==n?G.s:G.hs[vk].s,vl=vk==n?G.last:G.hs[vk].last,s=G.s,L=legal(s),c=chk(s),ended=over(s)||!!G.flag||!!G.resign||!!G.online?.finished;let st;if(G.resign){st=G.mode==1?(G.resign==G.me?'Desististe.':'O computador desistiu.')+' Ganham as '+(G.resign=='w'?'pretas':'brancas')+'.':`As ${G.resign=='w'?'brancas':'pretas'} desistiram. Ganham as ${G.resign=='w'?'pretas':'brancas'}.`;rec(G.resign==G.me?'d':'v')}else if(G.flag){st='Tempo esgotado! Ganham as '+(G.flag=='w'?'pretas':'brancas')+'.';rec(opp(G.flag)==G.me?'v':'d')}else if(ended)rec(!L.length&&c?(opp(s.t)==G.me?'v':'d'):'e');
  if(G.flag||G.resign){}else if(!L.length)st=c?`Xeque-mate! Ganham as ${s.t=='w'?'pretas':'brancas'}.`:'Afogamento: empate.';
  else if(s.h>=100)st='Empate pela regra dos 50 lances.';else if(s.b.filter(Boolean).length==2)st='Empate: material insuficiente.';
- else st=(G.mode==1&&s.t!=G.me?'O computador está a pensar…':`Vez das ${s.t=='w'?'brancas':'pretas'}.`)+(c?' Xeque!':'');
+ else st=G.online?(G.online.sending?'A enviar lance…':s.t==G.online.color?'É a tua vez.':'À espera do adversário…')+(c?' Xeque!':''):(G.mode==1&&s.t!=G.me?'O computador está a pensar…':`Vez das ${s.t=='w'?'brancas':'pretas'}.`)+(c?' Xeque!':'');
  let mv='';G.sans.forEach((x,j)=>mv+=(j%2?'':`<b>${j/2+1}.</b> `)+`<span class="${vk==j+1?'cur':''}" data-a="rv" data-x="${j+1}" style="cursor:pointer">${x}</span> `);
  const pm=G.pm?`<div class="grp"><b>Promover a:</b>${G.pm.map((m,i)=>`<button class="btn" data-a="pm" data-x="${i}" style="font-size:26px">${GL[m.p]}</button>`).join('')}</div>`:'';
  return `<div class="row"><div>${pb(G.flip?'w':'b')}${bh(vs,{flip:G.flip,sel:vk==n?G.sel:-1,tg:vk==n?G.tg:[],last:vl,ck:vk==n&&c?kq(s.b,s.t):-1})}${pb(G.flip?'b':'w')}<div class="card mvs">${mv||'Os lances aparecem aqui.'}</div></div>
- <div class="side"><div class="card"><div class="st" style="color:${ended?'var(--r)':'var(--gr)'}">${st}</div>${pm}</div>
+ <div class="side"><div class="card"><div class="st" style="color:${ended?'var(--r)':'var(--gr)'}">${st}</div>${onlineMessage?`<p class="mut" role="status">${htmlEsc(onlineMessage)}</p>`:''}${pm}</div>
  <div class="card" style="display:flex;flex-direction:column;gap:10px">
- ${grp('Modo','mode',[[1,'Contra o computador'],[2,'2 jogadores']],G.mode)}
- ${G.mode==1?grp('Jogas com','side',[['w','Brancas'],['b','Pretas']],G.me)+grp('Nível','lvl',[[1,'🤖 Novato ~400'],[2,'🤖 Clube ~1000'],[3,'🤖 Mestre ~1500']],G.lvl):''}
- <button class="btn big" data-a="online">🌐 Jogar online</button>${grp('Tempo','tc',Object.entries(TCL),G.tc)}<div class="grp"><button class="btn" data-a="tab" data-x="config">⚙ Temas e definições</button></div><div class="grp"><b>Placar:</b>${S.v}V · ${S.e}E · ${S.d}D · Rating ${S.r||800}</div><div class="grp"><button class="btn" data-a="new">Novo jogo</button><button class="btn" data-a="resign" ${ended?'disabled':''}>Desistir</button><button class="btn" data-a="flip">Virar</button><button class="btn ${G.an?'on':''}" data-a="an">📊 Análise</button></div></div>
+ ${G.online?`<div class="grp"><b>Partida online</b><span>${htmlEsc(G.online.opponentName)}</span></div>`:grp('Modo','mode',[[1,'Contra o computador'],[2,'2 jogadores']],G.mode)}
+ ${!G.online&&G.mode==1?grp('Jogas com','side',[['w','Brancas'],['b','Pretas']],G.me)+grp('Nível','lvl',[[1,'🤖 Novato ~400'],[2,'🤖 Clube ~1000'],[3,'🤖 Mestre ~1500']],G.lvl):''}
+ ${G.online?`<button class="btn big" data-a="leave-online">Sair da partida online</button>`:`<button class="btn big" data-a="online">🌐 Jogar online</button>`}${G.online?`<div class="grp"><b>Tempo:</b><span>${TCL[G.tc]}</span></div>`:grp('Tempo','tc',Object.entries(TCL),G.tc)}<div class="grp"><button class="btn" data-a="tab" data-x="config">⚙ Temas e definições</button></div><div class="grp"><b>Placar:</b>${S.v}V · ${S.e}E · ${S.d}D · Rating ${S.r||800}</div><div class="grp"><button class="btn" data-a="new">Novo jogo</button><button class="btn" data-a="resign" ${ended?'disabled':''}>Desistir</button><button class="btn" data-a="flip">Virar</button><button class="btn ${G.an?'on':''}" data-a="an">📊 Análise</button></div></div>
  ${G.an?pgAn(vs,vk,n):''}<div class="card"><b class="h">Como jogar</b><br>Toca numa peça para ver as casas possíveis e depois toca no destino. O roque, o en passant e a promoção estão incluídos.</div></div></div>`}
-function doMove(m){const L=legal(G.s);G.rv=-1;G.hs.push({s:G.s,last:G.last,n:G.sans.length,tm:G.tm.slice()});if(G.tc!='0')G.tm[G.s.t=='w'?0:1]+=TC[G.tc][1];G.sans.push(san(G.s,m,L));G.s=mk(G.s,m);G.last=[m.f,m.t];snd(over(G.s)?'e':chk(G.s)?'k':G.hs[G.hs.length-1].s.b[m.t]?'c':'m');G.sel=-1;G.tg=[];G.pm=null;render();aiMove()}
+function applyMove(m,remoteMove){const L=legal(G.s),mover=G.s.t=='w'?0:1;G.rv=-1;G.hs.push({s:G.s,last:G.last,n:G.sans.length,tm:G.tm.slice()});if(G.tc!='0'){if(remoteMove){const latency=Math.max(0,(Date.now()-(remoteMove.createdAt?.toMillis?.()||Date.now()))/1000);G.tm[mover]=Math.max(0,remoteMove.remainingTime-latency)}else G.tm[mover]+=TC[G.tc][1]}G.sans.push(san(G.s,m,L));G.s=mk(G.s,m);G.last=[m.f,m.t];snd(over(G.s)?'e':chk(G.s)?'k':G.hs[G.hs.length-1].s.b[m.t]?'c':'m');G.sel=-1;G.tg=[];G.pm=null;render()}
+function doMove(m){if(G.online){if(G.online.sending||G.online.color!=G.s.t)return;G.online.sending=true;render();const remainingTime=G.tc=='0'?null:G.tm[G.s.t=='w'?0:1]+TC[G.tc][1];window.firebaseOnline.sendMove({from:m.f,to:m.t,promotion:m.p||'',ply:G.online.ply,remainingTime}).catch(error=>{G.online.sending=false;onlineMessage='Não foi possível enviar o lance: '+error.message;render()});return}applyMove(m);aiMove()}
 function aiMove(){if(G.mode!=1||G.s.t==G.me||G.flag||G.resign||over(G.s))return;setTimeout(()=>{if(G.mode!=1||G.s.t==G.me||G.flag||G.resign||over(G.s))return;doMove(pick(G.s,G.lvl))},80)}
-function gClick(i){const s=G.s;if(G.rv>=0&&G.rv<G.hs.length)return;if(over(s)||G.flag||G.resign||(G.mode==1&&s.t!=G.me))return;const L=legal(s),p=s.b[i];
+function gClick(i){const s=G.s;if(G.rv>=0&&G.rv<G.hs.length)return;if(over(s)||G.flag||G.resign||(G.mode==1&&s.t!=G.me)||(G.online&&(G.online.sending||G.online.color!=s.t)))return;const L=legal(s),p=s.b[i];
  if(G.sel>=0){const ms=L.filter(m=>m.f==G.sel&&m.t==i);if(ms.length){if(ms[0].p){G.pm=ms;render();return}doMove(ms[0]);return}}
  if(p&&p[0]==s.t){G.sel=i;G.tg=L.filter(m=>m.f==i).map(m=>m.t)}else{G.sel=-1;G.tg=[]}G.pm=null;render()}
 function newGame(){Object.assign(G,{s:fen(START),hs:[],sans:[],sel:-1,tg:[],last:null,pm:null,tm:[TC[G.tc][0],TC[G.tc][0]],flag:'',resign:'',rec:0,rv:-1,cp:'',flip:G.mode==1&&G.me=='b'?1:0});render();aiMove()}
 function resignGame(){if(G.resign||G.flag||over(G.s))return;G.resign=G.mode==1?G.me:G.s.t;G.sel=-1;G.tg=[];G.pm=null;G.rv=-1;render()}
 const DESKTOP_DOWNLOAD_URL='https://github.com/D-DMr/xadrez/releases/latest/download/Xadrez-Total.exe';
-function pgDownload(){return `<div class="card" style="max-width:760px;margin:0 auto"><h2 class="h" style="font-size:28px">Joga no teu computador</h2><p>Descarrega e abre o ficheiro do Xadrez Total. Não precisa de instalação.</p><p><b>Windows 10/11 · 64 bits</b></p><a class="btn big" href="${DESKTOP_DOWNLOAD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none">⬇ Descarregar app (.exe)</a><p class="mut">As partidas, puzzles e definições funcionam offline. Para iniciar sessão com Google, a app abre o navegador e precisa de internet.</p><p class="mut">Sem assinatura digital, o Windows pode mostrar o aviso Microsoft Defender SmartScreen. A aplicação não contorna esse aviso.</p></div>`}
+function pgDownload(){return `<div class="card" style="max-width:760px;margin:0 auto"><h2 class="h" style="font-size:28px">Joga no teu computador</h2><p>Descarrega e abre o ficheiro do Xadrez Total. Não precisa de instalação.</p><p><b>Windows 10/11 · 64 bits</b></p><a class="btn big" href="${DESKTOP_DOWNLOAD_URL}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none">⬇ Descarregar app (.exe)</a><p class="mut">As partidas contra o computador, puzzles e definições funcionam offline. Jogar online e iniciar sessão com Google precisam de internet.</p><p class="mut">Sem assinatura digital, o Windows pode mostrar o aviso Microsoft Defender SmartScreen. A aplicação não contorna esse aviso.</p></div>`}
 /* PEÇAS */
 const PI={K:['Rei','—','1 casa em qualquer direção. Nunca pode ficar em xeque. Faz o roque com a torre.'],Q:['Dama','9','Move-se como a torre e o bispo juntos: quantas casas quiseres em linha reta ou diagonal.'],R:['Torre','5','Linhas e colunas, sem saltar peças. Brilha em colunas abertas e nos finais.'],B:['Bispo','3','Diagonais, sem saltar peças. Fica sempre na mesma cor de casa.'],N:['Cavalo','3','Move-se em «L» (2 + 1) e é a única peça que salta por cima das outras.'],P:['Peão','1','Avança 1 casa (2 no primeiro lance) e captura na diagonal. Ao chegar ao fim, promove.']};
 function pgPecas(){const b=Array(64).fill(null);b[P.sq]=P.col+P.pc;const s={b,t:P.col,c:'',ep:-1,h:0},tg=gen(s).map(m=>m.t),i=PI[P.pc];
@@ -276,7 +277,7 @@ const IP='background:var(--bg);color:var(--ink);border:1px solid var(--mut);bord
 let firebaseUser=null,firebaseAuthReady=false,firebaseAuthMessage='';
 const DESKTOP_APP=/Electron\//.test(navigator.userAgent);
 const htmlEsc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-document.addEventListener('firebase-auth-state',e=>{firebaseAuthReady=e.detail.ready;firebaseUser=e.detail.user;ST.u=firebaseUser?{n:clean(firebaseUser.displayName||firebaseUser.email),a:AVS[0]}:null;sv();render()});
+document.addEventListener('firebase-auth-state',e=>{firebaseAuthReady=e.detail.ready;firebaseUser=e.detail.user;if(G.srch&&firebaseUser&&onlineMessage.includes('Inicia sessão com Google')){G.srch=0;onlineMessage='Agora podes procurar uma partida online.';location.hash='jogar'}ST.u=firebaseUser?{n:clean(firebaseUser.displayName||firebaseUser.email),a:AVS[0]}:null;sv();render()});
 document.addEventListener('firebase-auth-message',e=>{firebaseAuthMessage=e.detail.message;render()});
 setTimeout(()=>{if(!firebaseAuthReady){firebaseAuthMessage='Não foi possível ligar à autenticação Firebase. Verifica a ligação à internet e tenta atualizar a página.';render()}},10000);
 function addCT(o){const n=clean(o&&o.n),l=o&&o.l,d=o&&o.d,im=(o&&o.img)||'';if(!n||!hx.test(l)||!hx.test(d)||(im&&(!imx.test(im)||im.length>600000)))return CM='Tema inválido (precisa de nome e duas cores).';if(ST.ct.length>=6)return CM='Máximo de 6 temas criados. Apaga alguns primeiro.';ST.ct.push({n,l,d,img:im});THEMES.push([l,d,n,im]);ST.th=THEMES.length-1;sv();CM='Tema «'+n+'» guardado e ativado.'}
@@ -301,11 +302,10 @@ function pgAn(vs,vk,n){const e=(vs.t=='w'?1:-1)*ab(vs,2,-1e9,1e9,0),m=Math.abs(e
  return `<div class="card" style="border-color:var(--b)"><h3 class="h" style="font-size:22px;color:var(--b)">📊 Análise</h3><div style="display:flex;height:24px;border-radius:6px;overflow:hidden;margin:8px 0;background:#262421"><div style="width:${p}%;background:#fff;color:#262421;font-weight:800;font-size:14px;padding-left:6px">${e>=0?tx:''}</div><div style="flex:1;color:#fff;font-weight:800;font-size:14px;text-align:right;padding-right:6px">${e<0?tx:''}</div></div><small class="mut">Barra: brancas à esquerda. Motor próprio, profundidade 2: indicativo.</small>
  <div class="grp" style="margin-top:8px"><button class="btn" data-a="rv" data-x="0">⏮</button><button class="btn" data-a="rv" data-x="${Math.max(0,vk-1)}">◀</button><button class="btn" data-a="rv" data-x="${Math.min(n,vk+1)}">▶</button><button class="btn" data-a="rv" data-x="${n}">⏭</button></div>
  <textarea id="pgn" readonly rows="5" style="width:100%;margin-top:8px;box-sizing:border-box;background:var(--bg);color:var(--ink);border:1px solid var(--mut);border-radius:6px;font-family:monospace">${pgn()}</textarea><div class="grp" style="margin-top:6px"><button class="btn" data-a="cp">Copiar PGN</button><span>${G.cp||''}</span></div></div>`}
-/* ONLINE (simulado) */
-const NM=['TacticaPT','Rainha_Dama','XequeMateLuis','DonaTorre','Cavalo_Bravo','Peao_Zen','Bispo77','Gambito_Lis'];
-function match(){const l=1+Math.random()*3|0;G.srch=0;G.opp={n:NM[Math.random()*NM.length|0],r:[400,1000,1500][l-1]+(Math.random()*160-80|0)};G.mode=1;G.lvl=l;G.me=Math.random()<.5?'w':'b';if(G.tc=='0')G.tc='10';newGame()}
-function pgSrch(){return `<div class="card srch"><div class="spin"></div><h2 class="h" style="font-size:28px">A procurar jogadores…</h2><p>${TCL[G.tc=='0'?'10':G.tc]} · jogo classificado</p><p class="mut">Modo online simulado: não há servidor, por isso o adversário será um bot.</p><button class="btn" data-a="cancel">Cancelar</button></div>`}
-const pb=c=>{const o=G.mode==1&&c!=G.me,n=G.mode!=1?(c=='w'?'Brancas':'Pretas'):o?(G.opp?G.opp.n:'Computador'):(ST.u?ST.u.n:'Tu'),r=G.opp&&G.mode==1?` (${o?G.opp.r:S.r||800})`:'';return `<div class="pbar"><span><span class="av">${o?'🤖':(ST.u?ST.u.a:'🙂')}</span> <b>${n}</b>${r}${o&&G.opp?' <small>· simulado</small>':''}</span><span>${cap(c)}</span>${clk(c)}</div>`};
+/* ONLINE */
+let onlineMessage='';
+function pgSrch(){return `<div class="card srch">${firebaseUser?'<div class="spin"></div>':''}<h2 class="h" style="font-size:28px">${firebaseUser?'A procurar jogadores…':'Inicia sessão para jogar online'}</h2><p>${htmlEsc(onlineMessage||'Partida em tempo real · necessita de outro jogador online.')}</p>${firebaseUser?'<button class="btn" data-a="cancel">Cancelar</button>':'<button class="btn" data-a="tab" data-x="perfil">Iniciar sessão Google</button>'}</div>`}
+const pb=c=>{const uid=G.online?(c=='w'?G.online.whiteUid:G.online.blackUid):null,o=G.online?uid!=G.online.uid:G.mode==1&&c!=G.me,n=G.online?(c=='w'?G.online.whiteName:G.online.blackName):G.mode!=1?(c=='w'?'Brancas':'Pretas'):o?(G.opp?G.opp.n:'Computador'):(ST.u?ST.u.n:'Tu');return `<div class="pbar"><span><span class="av">${o?'♟':(ST.u?ST.u.a:'🙂')}</span> <b>${htmlEsc(n)}</b></span><span>${cap(c)}</span>${clk(c)}</div>`};
 /* PUZZLES */
 const PZ=[['Mate nas filas de trás','6k1/5ppp/8/8/8/8/5PPP/3R2K1','d1d8','O rei está preso atrás dos seus próprios peões.'],['Mate da dama','6k1/5ppp/8/8/8/8/5PPP/Q5K1','a1a8','Uma dama na oitava fila é mate quando o rei não tem fuga.'],['Mate do pastor','r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR','h5f7','A dama, protegida pelo bispo, entra em f7.'],['Rei e torre','6k1/8/6K1/8/8/8/8/R7','a1a8','O teu rei corta as fugas e a torre dá o xeque final.'],['Garfo do cavalo','r3k3/8/8/3N4/8/8/8/4K3','d5c7','Xeque ao rei e ataque à torre ao mesmo tempo!'],['Dama e rei','7k/8/5KQ1/8/8/8/8/8','g6g7','A dama ao lado do rei, protegida por ele, não deixa fuga.'],['Escada de torre','1k6/8/1K6/8/8/8/8/7R','h1h8','O rei fecha a fila 7 e a torre dá mate na 8.'],['Mate sufocado','6rk/6pp/8/6N1/8/8/8/6K1','g5f7','O rei está cercado pelas suas peças: só o cavalo o consegue atacar.']];
 const Z={i:0,s:null,sel:-1,tg:[],msg:'',ok:0};
@@ -349,11 +349,11 @@ function render(){const pages={jogar:pgJogar,download:pgDownload,puzzles:pgPz,pe
 function act(a,x){
  if(a=='tab'){CM='';location.hash=x;return}
  if(['mode','side','lvl','tc'].includes(a))G.opp=0;
- if(a=='online'){if(tab!='jogar')location.hash='jogar';const id=G.sid=Date.now();G.srch=1;render();setTimeout(()=>{if(G.sid==id&&G.srch)match()},2500+Math.random()*2500);return}
- if(a=='cancel'){G.srch=0;G.sid=0;render();return}
- if(a=='mode'){G.mode=+x;newGame();return}
- if(a=='side'){G.me=x;newGame();return}
- if(a=='lvl'){G.lvl=+x}if(a=='rv'){const k=+x;G.rv=k>=G.hs.length?-1:k;G.cp=''}if(a=='an'){G.an^=1}if(a=='cp'){const t=$('pgn');t.select();const ok=()=>{G.cp='Copiado!';render()};try{navigator.clipboard.writeText(t.value).then(ok,()=>{document.execCommand('copy');ok()})}catch(e){document.execCommand('copy');ok()}return}if(a=='tc'){G.tc=x;newGame();return}if(a=='set'){const[k,v]=x.split(':');ST[k]=+v;sv()}if(a=='def'){Object.assign(ST,{pt:0,th:1,ps:0,co:1,so:1,hl:1,bs:480});sv()}
+ if(a=='online'){if(!window.firebaseOnline){onlineMessage='O serviço de partidas online ainda não está disponível.';render();return}if(!firebaseUser){G.srch=1;onlineMessage='Inicia sessão com Google para procurar uma partida.';render();return}G.srch=1;onlineMessage='A procurar outro jogador…';render();window.firebaseOnline.start(G.tc).catch(error=>{G.srch=0;onlineMessage='Não foi possível procurar uma partida: '+error.message;render()});return}
+ if(a=='cancel'){G.srch=0;G.sid=0;window.firebaseOnline?.cancel().catch(error=>{onlineMessage='Não foi possível cancelar a procura: '+error.message;render()});render();return}
+ if(a=='mode'){if(G.online)return;G.mode=+x;newGame();return}
+ if(a=='side'){if(G.online)return;G.me=x;newGame();return}
+ if(a=='lvl'){G.lvl=+x}if(a=='rv'){const k=+x;G.rv=k>=G.hs.length?-1:k;G.cp=''}if(a=='an'){G.an^=1}if(a=='cp'){const t=$('pgn');t.select();const ok=()=>{G.cp='Copiado!';render()};try{navigator.clipboard.writeText(t.value).then(ok,()=>{document.execCommand('copy');ok()})}catch(e){document.execCommand('copy');ok()}return} if(a=='tc'){if(G.online)return;G.tc=x;newGame();return}if(a=='set'){const[k,v]=x.split(':');ST[k]=+v;sv()}if(a=='def'){Object.assign(ST,{pt:0,th:1,ps:0,co:1,so:1,hl:1,bs:480});sv()}
  if(a=='ctn')addCT({n:$('tn').value,l:$('tl').value,d:$('td').value});
  if(a=='cti'){try{addCT(JSON.parse($('tc').value))}catch(e){CM='Código inválido.'}}
  if(a=='dct'){ST.ct=[];THEMES.length=7;ST.th=1;sv();CM='Temas criados apagados.'}
@@ -362,8 +362,9 @@ function act(a,x){
  if(a=='goog'){firebaseAuthMessage='';window.dispatchEvent(new Event('firebase-google-signin'));return}
  if(a=='bke'){CM='Copia o código abaixo para o outro dispositivo.';render();$('bk').value=JSON.stringify({v:S.v,e:S.e,d:S.d,r:S.r,u:ST.u});$('bk').select();return}
  if(a=='bki'){try{const o=JSON.parse($('bk').value),f=k=>Math.max(0,Math.min(99999,+o[k]|0));S.v=f('v');S.e=f('e');S.d=f('d');S.r=Math.max(100,Math.min(4000,+o.r|0||800));if(o.u&&AVS.includes(o.u.a)&&clean(o.u.n))ST.u={n:clean(o.u.n),a:o.u.a};saveS();sv();CM='Dados importados.'}catch(e){CM='Código inválido.'}}if(a=='rst'){S={v:0,e:0,d:0,r:800,h:[]};try{localStorage.removeItem('xz')}catch(e){}}if(a=='zp'){zInit(+x)}if(a=='zr'){zInit(Z.i)}
- if(a=='new'){newGame();return}
- if(a=='resign'){resignGame();return}
+ if(a=='new'){if(G.online&&!G.online.finished){onlineMessage='Termina a partida online antes de começar outra.';render();return}if(G.online){window.firebaseOnline?.close();G.online=null}newGame();return}
+ if(a=='resign'){if(G.online){window.firebaseOnline.resign().catch(error=>{onlineMessage='Não foi possível desistir: '+error.message;render()});return}resignGame();return}
+ if(a=='leave-online'){if(G.online&&!G.online.finished)window.firebaseOnline.resign().catch(error=>{onlineMessage='Não foi possível terminar a partida: '+error.message;render()});else if(G.online){window.firebaseOnline.close();G.online=null;G.resign='';G.mode=1;newGame()}return}
  if(a=='flip'){G.flip^=1}
  if(a=='pm'){doMove(G.pm[+x]);return}
  if(a=='pc'){P.pc=x;if(x=='P'&&(P.sq<8||P.sq>55))P.sq=35}
@@ -374,6 +375,11 @@ function act(a,x){
 document.addEventListener('click',e=>{const control=e.target.closest('[data-window-control]'),windowActions={minimize:'minimize','toggle-maximize':'toggleMaximize','toggle-fullscreen':'toggleFullscreen',close:'close'};if(control&&window.desktopWindow&&windowActions[control.dataset.windowControl]){window.desktopWindow[windowActions[control.dataset.windowControl]]();return}const q=e.target.closest('[data-q]');
  if(q){const i=+q.dataset.q;if(tab=='jogar')gClick(i);else if(tab=='puzzles')zClick(i);else if(tab=='pecas'){if(!(P.pc=='P'&&(i<8||i>55))){P.sq=i;render()}}return}
  const a=e.target.closest('[data-a]');if(a)act(a.dataset.a,a.dataset.x)});
+document.addEventListener('firebase-online-status',e=>{const{status,message}=e.detail;if(status=='searching'){G.srch=1;onlineMessage=message||'A procurar outro jogador…'}else if(status=='error'){G.srch=0;onlineMessage=message||'Não foi possível procurar uma partida.'}else if(status=='cancelled'){G.srch=0;onlineMessage='Procura cancelada.'}render()});
+document.addEventListener('firebase-online-match',e=>{const d=e.detail,color=d.whiteUid==d.uid?'w':'b';G.srch=0;G.opp=null;G.mode=2;G.tc=d.timeControl;G.online={roomId:d.roomId,uid:d.uid,color,whiteUid:d.whiteUid,blackUid:d.blackUid,whiteName:d.whiteName,blackName:d.blackName,opponentName:color=='w'?d.blackName:d.whiteName,ply:0,sending:false,finished:false};Object.assign(G,{s:fen(START),hs:[],sans:[],sel:-1,tg:[],last:null,pm:null,tm:[TC[G.tc][0],TC[G.tc][0]],flag:'',resign:'',rec:0,rv:-1,flip:color=='b'?1:0});onlineMessage='';render()});
+document.addEventListener('firebase-online-move',e=>{const d=e.detail;if(!G.online||G.online.roomId!=d.roomId||G.online.ply!=d.ply)return;const m=legal(G.s).find(move=>move.f==d.from&&move.t==d.to&&(!move.p||move.p==d.promotion));if(!m){G.online.finished=true;onlineMessage='A partida ficou dessincronizada. Sai da partida e tenta novamente.';render();return}G.online.ply++;G.online.sending=false;applyMove(m,d);if(over(G.s))G.online.finished=true});
+document.addEventListener('firebase-online-ended',e=>{if(!G.online||G.online.roomId!=e.detail.roomId)return;G.online.finished=true;G.resign=e.detail.endedBy==G.online.uid?G.online.color:(G.online.color=='w'?'b':'w');render()});
+document.addEventListener('firebase-online-error',e=>{onlineMessage=e.detail.message||'Erro na partida online.';if(G.online)G.online.sending=false;render()});
 document.addEventListener('dblclick',e=>{if(e.target.closest('.desktop-brand')&&window.desktopWindow)window.desktopWindow.toggleMaximize()});
 window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(TABS.some(t=>t[0]==id)){tab=id;render();window.scrollTo(0,0)}});
 render();
@@ -381,10 +387,119 @@ render();
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
 import { getAuth, GoogleAuthProvider, getRedirectResult, onAuthStateChanged, signInWithCredential, signInWithRedirect, signOut } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
-import { getFirestore, addDoc, collection, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
+import { getFirestore, addDoc, collection, deleteDoc, doc, getDoc, getDocs, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp, setDoc, where } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
 const app=initializeApp({apiKey:'AIzaSyB0YYPdPXyvthU1autG611fsjfoSgxDZk0',authDomain:'xadrez-3a613.firebaseapp.com',projectId:'xadrez-3a613',storageBucket:'xadrez-3a613.firebasestorage.app',messagingSenderId:'424719795420',appId:'1:424719795420:web:6fb57386b78b51d97aa019'});
 const auth=getAuth(app),db=getFirestore(app),provider=new GoogleAuthProvider();
 const send=(name,detail)=>document.dispatchEvent(new CustomEvent(name,{detail}));
+const onlineRooms=collection(db,'online_rooms');
+let onlineSearchId=0,onlineSearchRoom=null,onlineRoomUnsubscribe=null,onlineMovesUnsubscribe=null,onlineRoomId=null;
+const onlineStatus=(status,message)=>send('firebase-online-status',{status,message});
+const displayName=user=>(user.displayName||user.email?.split('@')[0]||'Jogador').replace(/[^\w \-À-ÿ.]/g,'').trim().slice(0,24)||'Jogador';
+function stopOnlineListeners(){onlineRoomUnsubscribe?.();onlineMovesUnsubscribe?.();onlineRoomUnsubscribe=null;onlineMovesUnsubscribe=null;onlineRoomId=null}
+function activateOnlineRoom(roomRef,room,user){
+  if(room.status=='finished'){send('firebase-online-ended',{roomId:roomRef.id,endedBy:room.endedBy});return}
+  if(room.status!='active'||onlineRoomId==roomRef.id)return;
+  onlineSearchId++;
+  stopOnlineListeners();
+  onlineRoomId=roomRef.id;
+  send('firebase-online-match',{roomId:roomRef.id,uid:user.uid,whiteUid:room.whiteUid,blackUid:room.blackUid,whiteName:room.whiteName,blackName:room.blackName,timeControl:room.timeControl});
+  let nextPly=0;
+  onlineRoomUnsubscribe=onSnapshot(roomRef,snapshot=>{
+    if(!snapshot.exists()){send('firebase-online-error',{message:'A sala da partida deixou de existir.'});return}
+    const updated=snapshot.data();
+    if(updated.status=='finished')send('firebase-online-ended',{roomId:roomRef.id,endedBy:updated.endedBy});
+  },error=>send('firebase-online-error',{message:'Ligação à partida perdida: '+error.message}));
+  onlineMovesUnsubscribe=onSnapshot(query(collection(roomRef,'moves'),orderBy('ply')),snapshot=>{
+    for(const moveDoc of snapshot.docs){
+      const move=moveDoc.data();
+      if(move.ply<nextPly)continue;
+      if(move.ply!==nextPly)break;
+      nextPly++;
+      send('firebase-online-move',{roomId:roomRef.id,ply:move.ply,from:move.from,to:move.to,promotion:move.promotion,remainingTime:move.remainingTime,createdAt:move.createdAt});
+    }
+  },error=>send('firebase-online-error',{message:'Não foi possível sincronizar os lances: '+error.message}));
+}
+async function findOnlineMatch(timeControl){
+  const user=auth.currentUser;
+  if(!user)throw new Error('Inicia sessão com Google antes de procurar uma partida.');
+  if(!['0','1','3','10','30'].includes(timeControl))throw new Error('Escolhe um controlo de tempo válido.');
+  await window.firebaseOnline.cancel(false);
+  const searchId=++onlineSearchId;
+  const myRoom=doc(onlineRooms);
+  onlineSearchRoom=myRoom;
+  await setDoc(myRoom,{hostUid:user.uid,hostName:displayName(user),status:'waiting',timeControl:timeControl=='0'?'10':timeControl,createdAt:serverTimestamp()});
+  onlineRoomUnsubscribe=onSnapshot(myRoom,snapshot=>{
+    if(snapshot.exists())activateOnlineRoom(snapshot.ref,snapshot.data(),user);
+  },error=>{if(onlineRoomId)send('firebase-online-error',{message:'Ligação perdida durante a partida: '+error.message});else{cancelOnlineSearch().catch(cleanupError=>console.error('Could not clean up online matchmaking room:',cleanupError));onlineStatus('error','Ligação perdida durante a procura: '+error.message)}});
+  onlineStatus('searching','A procurar outro jogador…');
+  while(searchId==onlineSearchId){
+    const waiting=await getDocs(query(onlineRooms,where('status','==','waiting'),limit(25)));
+    for(const candidate of waiting.docs){
+      if(searchId!=onlineSearchId)break;
+      if(candidate.id==myRoom.id)continue;
+      const room=candidate.data();
+      if(Date.now()-(room.createdAt?.toMillis?.()||Date.now())>120000){
+        try{await deleteDoc(candidate.ref)}catch(error){if(error.code!='permission-denied')throw error}
+        continue;
+      }
+      if(room.hostUid==user.uid)continue;
+      const whiteUid=Math.random()<.5?user.uid:room.hostUid;
+      try{
+        const matched=await runTransaction(db,async transaction=>{
+          const mine=await transaction.get(myRoom);
+          if(mine.exists()&&mine.data().status=='active')return{ref:myRoom,data:mine.data()};
+          if(!mine.exists()||mine.data().status!='waiting')return null;
+          const opponent=await transaction.get(candidate.ref);
+          if(!opponent.exists()||opponent.data().status!='waiting'||opponent.data().hostUid==user.uid)return null;
+          const host=opponent.data(),guestName=displayName(user),whiteName=whiteUid==user.uid?guestName:host.hostName,blackName=whiteUid==user.uid?host.hostName:guestName;
+          const activeRoom={...host,status:'active',guestUid:user.uid,guestName,whiteUid,blackUid,whiteName,blackName,ply:0,turnUid:whiteUid,lastMoveId:'',updatedAt:serverTimestamp()};
+          transaction.update(candidate.ref,activeRoom);
+          transaction.delete(myRoom);
+          return{ref:candidate.ref,data:activeRoom};
+        });
+        if(matched){onlineSearchRoom=null;activateOnlineRoom(matched.ref,matched.data,user);return}
+      }catch(error){if(error.code!='aborted'&&error.code!='failed-precondition')throw error}
+    }
+    await new Promise(resolve=>setTimeout(resolve,2500));
+  }
+}
+async function cancelOnlineSearch(){
+  onlineSearchId++;
+  const room=onlineSearchRoom;
+  onlineSearchRoom=null;
+  onlineRoomUnsubscribe?.();
+  onlineRoomUnsubscribe=null;
+  if(room){const snapshot=await getDoc(room);if(snapshot.exists()&&snapshot.data().status=='waiting')await deleteDoc(room)}
+}
+window.firebaseOnline={
+  start:async timeControl=>{try{return await findOnlineMatch(timeControl)}catch(error){try{await cancelOnlineSearch()}catch(cleanupError){console.error('Could not clean up online matchmaking room:',cleanupError)}throw error}},
+  cancel:async notify=>{await cancelOnlineSearch();if(notify!==false)onlineStatus('cancelled','Procura cancelada.')},
+  close:()=>{onlineSearchId++;stopOnlineListeners();onlineSearchRoom=null},
+  sendMove:async({from,to,promotion,ply,remainingTime})=>{
+    const user=auth.currentUser,roomId=onlineRoomId;
+    if(!user||!roomId)throw new Error('A partida online já não está ligada.');
+    const roomRef=doc(onlineRooms,roomId),moveRef=doc(collection(roomRef,'moves'));
+    await runTransaction(db,async transaction=>{
+      const snapshot=await transaction.get(roomRef);
+      if(!snapshot.exists())throw new Error('A sala da partida deixou de existir.');
+      const room=snapshot.data();
+      if(room.status!='active'||room.turnUid!=user.uid||room.ply!=ply)throw new Error('Já não é a tua vez ou a partida foi atualizada.');
+      transaction.set(moveRef,{uid:user.uid,ply,from,to,promotion,remainingTime,createdAt:serverTimestamp()});
+      transaction.update(roomRef,{ply:ply+1,turnUid:room.whiteUid==user.uid?room.blackUid:room.whiteUid,lastMoveId:moveRef.id,updatedAt:serverTimestamp()});
+    });
+  },
+  resign:async()=>{
+    const user=auth.currentUser,roomId=onlineRoomId;
+    if(!user||!roomId)throw new Error('A partida online já não está ligada.');
+    await runTransaction(db,async transaction=>{
+      const roomRef=doc(onlineRooms,roomId),snapshot=await transaction.get(roomRef);
+      if(!snapshot.exists()||snapshot.data().status!='active')throw new Error('A partida já terminou.');
+      const room=snapshot.data(),winnerUid=room.whiteUid==user.uid?room.blackUid:room.whiteUid;
+      if(room.whiteUid!=user.uid&&room.blackUid!=user.uid)throw new Error('Não fazes parte desta partida.');
+      transaction.update(roomRef,{status:'finished',result:'resign',endedBy:user.uid,winnerUid,endedAt:serverTimestamp()});
+    });
+  }
+};
 onAuthStateChanged(auth,user=>send('firebase-auth-state',{ready:true,user:user?{uid:user.uid,email:user.email,displayName:user.displayName}:null}),error=>{send('firebase-auth-state',{ready:true,user:null});send('firebase-auth-message',{message:'Falha ao verificar a sessão: '+error.message})});
 const recordLogin=async user=>{
   try{
